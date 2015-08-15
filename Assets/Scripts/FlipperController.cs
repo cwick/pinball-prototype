@@ -6,9 +6,9 @@ public class FlipperController : MonoBehaviour
 {
 	public float speed = 360;
 	[Range(0, 360)]
-	public float
-		initialAngle = 0;
-	public float maxAngle = 90;
+	public float startAngle = 0;
+	[Range(0, 360)]
+	public float endAngle = 90;
 	private Rigidbody2D rigidBody;
 
 	public void Flip()
@@ -31,9 +31,14 @@ public class FlipperController : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (rigidBody.rotation > maxAngle) {
-			rigidBody.rotation = maxAngle;
+	}
+
+	void Update()
+	{
+		if (IsFlipperAtMaxAngle) {
+			rigidBody.rotation = endAngle;
 			rigidBody.angularVelocity = 0;
+			transform.rotation = Quaternion.Euler(new Vector3(0, 0, endAngle));
 		}
 	}
 
@@ -48,6 +53,10 @@ public class FlipperController : MonoBehaviour
 
 	void SetInitialPosition()
 	{
-		transform.rotation = Quaternion.Euler(new Vector3(0, 0, initialAngle));
+		transform.rotation = Quaternion.Euler(new Vector3(0, 0, startAngle));
+	}
+
+	bool IsFlipperAtMaxAngle {
+		get { return rigidBody.rotation > endAngle; }
 	}
 }
