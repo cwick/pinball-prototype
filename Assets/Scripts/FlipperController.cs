@@ -34,14 +34,22 @@ public class FlipperController : MonoBehaviour
 
     public float AngularVelocity
     {
-        get { return speed * Multiplier; }
+        get { return speed * MirrorFlip; }
+    }
+
+    public float ActualStartAngle {
+        get { return startAngle * MirrorFlip; }
+    }
+
+    public float ActualEndAngle {
+        get { return endAngle * MirrorFlip; }
     }
 
     #endregion
 
     #region Private Properties and Fields
 
-    private int Multiplier {
+    private int MirrorFlip {
         get { return mirror ? -1 : 1; }
     }
 
@@ -64,7 +72,7 @@ public class FlipperController : MonoBehaviour
     void FixedUpdate()
     {
         if (ShouldFlipperStop) {
-            rigidBody.rotation = endAngle;
+            rigidBody.rotation = ActualEndAngle;
             rigidBody.angularVelocity = 0;
         }
     }
@@ -81,11 +89,11 @@ public class FlipperController : MonoBehaviour
         SetInitialPosition();
     }
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
         var meshFilter = GetComponent<MeshFilter>();
         Gizmos.color = Color.red;
-        Gizmos.DrawWireMesh(meshFilter.sharedMesh, transform.position, Quaternion.Euler(Vector3.forward * endAngle), transform.localScale);
+        Gizmos.DrawWireMesh(meshFilter.sharedMesh, transform.position, Quaternion.Euler(Vector3.forward * ActualEndAngle), transform.localScale);
     }
 
     #endregion
@@ -94,12 +102,12 @@ public class FlipperController : MonoBehaviour
 
     void SetInitialPosition()
     {
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, startAngle));
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, ActualStartAngle));
     }
 
     bool ShouldFlipperStop {
         get {
-            return rigidBody.rotation + (Time.deltaTime * speed) > endAngle; 
+            return Mathf.Abs(rigidBody.rotation + (Time.deltaTime * AngularVelocity)) > Mathf.Abs(ActualEndAngle);
         }
     }
 
