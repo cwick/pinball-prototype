@@ -24,12 +24,6 @@ public class CircleBuilder : MonoBehaviour
         BuildMesh();
     }
 
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.TransformPoint(Vector3.up * radius));
-    }
-
     #endregion
 
     void BuildMesh()
@@ -39,6 +33,7 @@ public class CircleBuilder : MonoBehaviour
 
         mesh.vertices = BuildVertices();
         mesh.triangles = BuildTriangles();
+        mesh.RecalculateNormals();
         filter.sharedMesh = mesh;
     }
 
