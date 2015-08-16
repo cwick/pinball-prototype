@@ -17,7 +17,7 @@ public class RectangleBuilder : MonoBehaviour
         BuildMesh();
     }
 
-    void OnValidate()
+    public void OnValidate()
     {
         if (width < 0) {
             width = 0;

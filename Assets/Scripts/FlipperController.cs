@@ -7,6 +7,7 @@ public class FlipperController : MonoBehaviour
     #region Editor Fields
 
     [Range(0, 800)]
+    [Tooltip("Angular speed at which the flipper moves")]
     public float speed = 360;
 
     [Range(0, 360)]
