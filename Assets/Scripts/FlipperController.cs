@@ -23,8 +23,12 @@ public class FlipperController : MonoBehaviour
 
     public void Flip()
     {
-        SetInitialPosition();
-        rigidBody.angularVelocity = AngularVelocity;
+        rigidBody.angularVelocity = DesiredAngularVelocity;
+    }
+
+    public void Fall()
+    {
+        rigidBody.angularVelocity = -DesiredAngularVelocity;
     }
 
     #endregion
@@ -32,9 +36,13 @@ public class FlipperController : MonoBehaviour
 
     #region Public Properties
 
-    public float AngularVelocity
+    public float DesiredAngularVelocity
     {
         get { return speed * MirrorFlip; }
+    }
+
+    public float ActualAngularVelocity {
+        get { return rigidBody.angularVelocity * MirrorFlip; }
     }
 
     public float ActualStartAngle {
@@ -72,7 +80,11 @@ public class FlipperController : MonoBehaviour
     void FixedUpdate()
     {
         if (ShouldFlipperStop) {
-            rigidBody.rotation = ActualEndAngle;
+            if (ActualAngularVelocity > 0) {
+                rigidBody.rotation = ActualEndAngle;
+            } else {
+                rigidBody.rotation = ActualStartAngle;
+            }
             rigidBody.angularVelocity = 0;
         }
     }
@@ -81,6 +93,8 @@ public class FlipperController : MonoBehaviour
     {
         if (Input.GetButtonDown("Flippers")) {
             Flip();
+        } else if (Input.GetButtonUp("Flippers")) {
+            Fall();
         }
     }
 
@@ -97,6 +111,8 @@ public class FlipperController : MonoBehaviour
         var meshFilter = GetComponent<MeshFilter>();
         Gizmos.color = Color.red;
         Gizmos.DrawWireMesh(meshFilter.sharedMesh, transform.position, Quaternion.Euler(Vector3.forward * ActualEndAngle), transform.localScale);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireMesh(meshFilter.sharedMesh, transform.position, Quaternion.Euler(Vector3.forward * ActualStartAngle), transform.localScale);
     }
 
     #endregion
@@ -110,7 +126,9 @@ public class FlipperController : MonoBehaviour
 
     bool ShouldFlipperStop {
         get {
-            return Mathf.Abs(rigidBody.rotation + (Time.deltaTime * AngularVelocity)) > Mathf.Abs(ActualEndAngle);
+            var expectedAngle = Mathf.Abs(rigidBody.rotation + (Time.deltaTime * rigidBody.angularVelocity));
+
+            return expectedAngle > endAngle || expectedAngle < startAngle;
         }
     }
 
