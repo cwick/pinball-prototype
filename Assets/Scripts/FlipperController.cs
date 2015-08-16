@@ -79,6 +79,9 @@ public class FlipperController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetButtonDown("Flippers")) {
+            Flip();
+        }
     }
 
     void OnValidate()
