@@ -28,7 +28,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148984}
-  m_LocalRotation: {x: 0, y: 0, z: .882947624, w: -.469471604}
+  m_LocalRotation: {x: 0, y: 0, z: .874619782, w: -.484809577}
   m_LocalPosition: {x: -6.51000023, y: -11.8900003, z: 2}
   m_LocalScale: {x: 1, y: 4.51000023, z: 1}
   m_Children: []
@@ -108,9 +108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf326c5617ef94ce0adcda53319cb6d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 187
-  startAngle: 236
-  endAngle: 259
+  speed: 339
+  startAngle: 238
+  endAngle: 277
   mirror: 0
 --- !u!114 &11469642
 MonoBehaviour:
@@ -146,7 +146,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: speed
-      value: 187
+      value: 339
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: startAngle
+      value: 238
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: endAngle
+      value: 277
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
