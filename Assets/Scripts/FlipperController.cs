@@ -81,12 +81,8 @@ public class FlipperController : MonoBehaviour
     void FixedUpdate()
     {
         if (ShouldFlipperStop) {
-            if (ActualAngularVelocity > 0) {
-                rigidBody.rotation = ActualEndAngle;
-            } else {
-                rigidBody.rotation = ActualStartAngle;
-            }
-            rigidBody.angularVelocity = 0;
+            float desiredAngle = ActualAngularVelocity > 0 ? ActualEndAngle : ActualStartAngle;
+            rigidBody.MoveRotation(desiredAngle);
         }
     }
 
