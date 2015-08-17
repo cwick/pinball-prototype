@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
+
+public interface IMeshChangedHandler : IEventSystemHandler
+{
+    void OnMeshChanged();
+}
 
 [RequireComponent(typeof(MeshFilter))]
 public class CircleBuilder : MonoBehaviour
@@ -35,6 +41,7 @@ public class CircleBuilder : MonoBehaviour
         mesh.triangles = BuildTriangles();
         mesh.RecalculateNormals();
         filter.sharedMesh = mesh;
+        SendMeshChangedMessage();
     }
 
     Vector3[] BuildVertices()
@@ -44,8 +51,8 @@ public class CircleBuilder : MonoBehaviour
 
         for (var i=0; i<vertexCount; i++) {
             var t = i * angleStep;
-            var x = radius * Mathf.Cos(t) + pivot.x;
-            var y = radius * Mathf.Sin(t) + pivot.y;
+            var x = radius * Mathf.Cos(t) + pivot.x*radius;
+            var y = radius * Mathf.Sin(t) + pivot.y*radius;
 
             if (HasOddVertexCount) {
                 vertices [i] = new Vector3(y, x, 0); 
@@ -74,5 +81,10 @@ public class CircleBuilder : MonoBehaviour
 
     bool HasOddVertexCount {
         get { return vertexCount % 2 != 0; }
+    }
+
+    void SendMeshChangedMessage()
+    {
+        ExecuteEvents.Execute<IMeshChangedHandler>(this.gameObject, null, (component, e) => component.OnMeshChanged());
     }
 }

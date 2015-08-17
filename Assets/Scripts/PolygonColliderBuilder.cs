@@ -2,9 +2,14 @@
 using System.Collections;
 using System.Linq;
 
-public class PolygonColliderBuilder : MonoBehaviour
+public class PolygonColliderBuilder : MonoBehaviour, IMeshChangedHandler
 {
     #region Messages
+
+    void Reset()
+    {
+        OnValidate();
+    }
 
     void OnValidate()
     {
@@ -21,5 +26,11 @@ public class PolygonColliderBuilder : MonoBehaviour
         collider.SetPath(0, pathPoints.ToArray());
     }
 
+    public void OnMeshChanged()
+    { 
+        OnValidate();
+    }
+
     #endregion
+
 }
