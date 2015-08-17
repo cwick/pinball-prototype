@@ -28,9 +28,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148984}
-  m_LocalRotation: {x: 0, y: 0, z: .874619782, w: -.484809577}
+  m_LocalRotation: {x: 0, y: 0, z: .788010776, w: -.615661442}
   m_LocalPosition: {x: -6.51000023, y: -11.8900003, z: 2}
-  m_LocalScale: {x: 1, y: 4.51000023, z: 1}
+  m_LocalScale: {x: 1, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -79,7 +79,7 @@ Rigidbody2D:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!60 &6040636
 PolygonCollider2D:
@@ -108,9 +108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf326c5617ef94ce0adcda53319cb6d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 339
-  startAngle: 238
-  endAngle: 277
+  speed: 500
+  startAngle: 256
+  endAngle: 295
   mirror: 0
 --- !u!114 &11469642
 MonoBehaviour:
@@ -146,15 +146,27 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: speed
-      value: 339
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: startAngle
-      value: 238
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: endAngle
-      value: 277
+      value: 295
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalScale.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: radius
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
