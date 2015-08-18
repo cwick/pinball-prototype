@@ -13,16 +13,17 @@ public class CircleBuilder : MonoBehaviour
 {
     public int vertexCount = 10;
     public float radius = 1;
+    public Vector2 size;
     public Vector2 pivot = Vector2.zero;
     [Range(0, 360)]
-    public float
-        rotation = 0;
+    public float rotation = 0;
     public Vector2 scale = Vector2.one;
 
     #region Messages
 
     void Reset()
     {
+        size = Vector2.one * 2 * radius;
         BuildMesh();
     }
 
@@ -56,10 +57,10 @@ public class CircleBuilder : MonoBehaviour
 
         for (var i=0; i<vertexCount; i++) {
             var t = i * angleStep;
-            var x = radius * Mathf.Cos(t);
-            var y = radius * Mathf.Sin(t);
+            var x = Mathf.Cos(t + Mathf.PI / 2);
+            var y = Mathf.Sin(t + Mathf.PI / 2);
 
-            vertices [i] = new Vector3(x, y, 0);
+            vertices[i] = new Vector3(x, y, 0);
         }
 
         return vertices;
@@ -72,9 +73,9 @@ public class CircleBuilder : MonoBehaviour
 
         for (var i=0; i<triangleCount; i++) {
             var offset = i * 3;
-            triangles [offset] = 0;
-            triangles [offset + 1] = i + 1;
-            triangles [offset + 2] = i + 2;
+            triangles[offset] = 0;
+            triangles[offset + 1] = i + 1;
+            triangles[offset + 2] = i + 2;
         }
 
         return triangles;
@@ -82,17 +83,25 @@ public class CircleBuilder : MonoBehaviour
 
     Vector3[] TransformVertices(Vector3[] vertices)
     {
+        var bounds = CalculateBounds(vertices);
+        var scaleFactor = new Vector2(size.x / bounds.size.x, size.y / bounds.size.y);
+
         return vertices.Select((v) => {
-            var translation = pivot*radius;
-            var rotationAngle = HasOddVertexCount ? this.rotation + 90 : this.rotation;
-            var rotationQuaternion = Quaternion.AngleAxis(rotationAngle, Vector3.forward);
-            var scale = this.scale;
+            var translation = pivot * radius;
+            var rotationQuaternion = Quaternion.AngleAxis(rotation, Vector3.forward);
+            var scale = this.scale * radius;
+            scale.Scale(scaleFactor);
             return Matrix4x4.TRS(translation, rotationQuaternion, scale).MultiplyPoint3x4(v);
         }).ToArray();
     }
 
-    bool HasOddVertexCount {
-        get { return vertexCount % 2 != 0; }
+    Bounds CalculateBounds(Vector3[] vertices)
+    {
+        Bounds bounds = new Bounds();
+        foreach (Vector3 v in vertices) {
+            bounds.Encapsulate(v);
+        }
+        return bounds;
     }
 
     void SendMeshChangedMessage()
