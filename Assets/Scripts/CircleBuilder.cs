@@ -93,11 +93,12 @@ public class CircleBuilder : MonoBehaviour
     {
         var angleStep = -2 * Mathf.PI / vertexCount;
         var vertices = new Vector3[vertexCount];
+        var rotationRadians = rotation * Mathf.Deg2Rad;
 
         for (var i=0; i<vertexCount; i++) {
             var t = i * angleStep;
-            var x = Mathf.Cos(t + Mathf.PI / 2);
-            var y = Mathf.Sin(t + Mathf.PI / 2);
+            var x = Mathf.Cos(t + rotationRadians + Mathf.PI / 2);
+            var y = Mathf.Sin(t + rotationRadians + Mathf.PI / 2);
 
             vertices[i] = new Vector3(x, y, 0);
         }
@@ -122,17 +123,27 @@ public class CircleBuilder : MonoBehaviour
 
     Vector3[] TransformVertices(Vector3[] vertices)
     {
-        var scaleFactor = CalculateScale(vertices);
-        var translation = CalculateTranslation();
-        var rotationQuaternion = Quaternion.AngleAxis(rotation, Vector3.forward);
-        var transform = Matrix4x4.TRS(translation, rotationQuaternion, scaleFactor);
+        var bounds = CalculateBounds(vertices);
+        var translation = CalculateTranslation(bounds);
+        var scaleFactor = CalculateScale(vertices, bounds);
 
+        if (sizingMethod == PolygonSizing.Bounds) {
+            translation -= new Vector2(bounds.center.x * scaleFactor.x, bounds.center.y * scaleFactor.y);
+        }
+
+        var transform = Matrix4x4.TRS(translation, Quaternion.identity, scaleFactor);
+
+        return TransformVertices(vertices, transform);
+    }
+
+    Vector3[] TransformVertices(Vector3[] vertices, Matrix4x4 matrix)
+    {
         return vertices.Select((v) => {
-            return transform.MultiplyPoint3x4(v);
+            return matrix.MultiplyPoint3x4(v);
         }).ToArray();
     }
 
-    Vector2 CalculateTranslation() 
+    Vector2 CalculateTranslation(Bounds bounds) 
     {
         var translation = pivot;
         var factor = sizingMethod == PolygonSizing.Bounds ? size : new Vector2(radius, radius);
@@ -140,12 +151,11 @@ public class CircleBuilder : MonoBehaviour
         return translation;
     }
 
-    Vector2 CalculateScale(Vector3[] vertices) 
+    Vector2 CalculateScale(Vector3[] vertices, Bounds bounds) 
     {
         Vector2 scaleFactor;
 
         if (sizingMethod == PolygonSizing.Bounds) {
-            var bounds = CalculateBounds(vertices);
             scaleFactor = new Vector2(size.x / bounds.size.x, size.y / bounds.size.y);
         } else {
             scaleFactor = new Vector2(radius, radius);
