@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Linq;
 
+[RequireComponent(typeof(PolygonCollider2D))]
+[RequireComponent(typeof(MeshFilter))]
 public class PolygonColliderBuilder : MonoBehaviour, IMeshChangedHandler
 {
     #region Messages
@@ -17,7 +19,7 @@ public class PolygonColliderBuilder : MonoBehaviour, IMeshChangedHandler
         var mesh = filter.sharedMesh;
         var collider = GetComponent<PolygonCollider2D>();
 
-        if (!collider || !mesh || !filter) {
+        if (!mesh) {
             return;
         }
 
