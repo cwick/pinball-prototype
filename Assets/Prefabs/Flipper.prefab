@@ -28,9 +28,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148984}
-  m_LocalRotation: {x: 0, y: 0, z: .788010776, w: -.615661442}
-  m_LocalPosition: {x: -6.51000023, y: -11.8900003, z: 2}
-  m_LocalScale: {x: 1, y: 4, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -.852640212, w: -.522498488}
+  m_LocalPosition: {x: 6.76999998, y: -15.71, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -94,9 +94,9 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Points:
     m_Paths:
-    - - {x: .49999997, y: 1}
-      - {x: 1.36602545, y: -.5}
-      - {x: -.366025388, y: -.50000006}
+    - - {x: -4.17546744e-08, y: 3}
+      - {x: .349999934, y: 1.1920929e-07}
+      - {x: -.349999994, y: 0}
 --- !u!114 &11440786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -109,9 +109,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 500
-  startAngle: 256
-  endAngle: 295
-  mirror: 0
+  startAngle: 243
+  endAngle: 290
+  mirror: 1
 --- !u!114 &11469642
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -125,11 +125,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vertexCount: 3
   radius: 1
-  size: {x: 0, y: 0}
-  pivot: {x: .5, y: 0}
+  size: {x: .699999988, y: 3}
+  pivot: {x: 0, y: .5}
   rotation: 0
   scale: {x: 1, y: 1}
-  sizingMethod: 0
+  sizingMethod: 1
 --- !u!114 &11481474
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,6 +171,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: size.y
+      value: 3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
