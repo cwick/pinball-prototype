@@ -4,8 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.Linq;
 
-[CustomEditor(typeof(CircleBuilder))]
-public class FooEditor : Editor {
+[CustomEditor(typeof(PolygonBuilder))]
+public class PolygonBuilderEditor : Editor {
     private string[] HIDDEN_PROPERTIES = { "radius", "size", "sizingMethod" };
 
     public override void OnInspectorGUI() {
@@ -34,7 +34,7 @@ public class FooEditor : Editor {
         }
 
         serializedObject.ApplyModifiedProperties();
-    } 
+    }
 }
 
 public interface IMeshChangedHandler : IEventSystemHandler
@@ -47,7 +47,7 @@ public enum PolygonSizing {
 };
 
 [RequireComponent(typeof(MeshFilter))]
-public class CircleBuilder : MonoBehaviour
+public class PolygonBuilder : MonoBehaviour
 {
     public int vertexCount = 10;
     public float radius = 1;
@@ -124,7 +124,7 @@ public class CircleBuilder : MonoBehaviour
     Vector3[] TransformVertices(Vector3[] vertices)
     {
         var bounds = CalculateBounds(vertices);
-        var translation = CalculateTranslation(bounds);
+        var translation = CalculateTranslation();
         var scaleFactor = CalculateScale(vertices, bounds);
 
         if (sizingMethod == PolygonSizing.Bounds) {
@@ -136,14 +136,7 @@ public class CircleBuilder : MonoBehaviour
         return TransformVertices(vertices, transform);
     }
 
-    Vector3[] TransformVertices(Vector3[] vertices, Matrix4x4 matrix)
-    {
-        return vertices.Select((v) => {
-            return matrix.MultiplyPoint3x4(v);
-        }).ToArray();
-    }
-
-    Vector2 CalculateTranslation(Bounds bounds) 
+    Vector2 CalculateTranslation()
     {
         var translation = pivot;
         var factor = sizingMethod == PolygonSizing.Bounds ? size : new Vector2(radius, radius);
@@ -151,7 +144,7 @@ public class CircleBuilder : MonoBehaviour
         return translation;
     }
 
-    Vector2 CalculateScale(Vector3[] vertices, Bounds bounds) 
+    Vector2 CalculateScale(Vector3[] vertices, Bounds bounds)
     {
         Vector2 scaleFactor;
 
@@ -174,8 +167,16 @@ public class CircleBuilder : MonoBehaviour
         return bounds;
     }
 
+    Vector3[] TransformVertices(Vector3[] vertices, Matrix4x4 matrix)
+    {
+        return vertices.Select((v) => {
+            return matrix.MultiplyPoint3x4(v);
+        }).ToArray();
+    }
+
     void SendMeshChangedMessage()
     {
         ExecuteEvents.Execute<IMeshChangedHandler>(this.gameObject, null, (component, e) => component.OnMeshChanged());
     }
 }
+

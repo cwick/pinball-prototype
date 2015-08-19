@@ -94,9 +94,9 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Points:
     m_Paths:
-    - - {x: 0, y: 1.5}
-      - {x: -.866025388, y: -5.96046448e-08}
-      - {x: .866025448, y: 8.94069672e-08}
+    - - {x: .49999997, y: 1}
+      - {x: 1.36602545, y: -.5}
+      - {x: -.366025388, y: -.50000006}
 --- !u!114 &11440786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -125,7 +125,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vertexCount: 3
   radius: 1
+  size: {x: 0, y: 0}
   pivot: {x: .5, y: 0}
+  rotation: 0
+  scale: {x: 1, y: 1}
+  sizingMethod: 0
 --- !u!114 &11481474
 MonoBehaviour:
   m_ObjectHideFlags: 1
