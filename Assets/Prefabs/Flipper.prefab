@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 481926}
   - 33: {fileID: 3363726}
-  - 114: {fileID: 11469642}
   - 23: {fileID: 2310640}
   - 114: {fileID: 11481474}
   - 60: {fileID: 6040636}
@@ -112,24 +111,6 @@ MonoBehaviour:
   startAngle: 243
   endAngle: 290
   mirror: 1
---- !u!114 &11469642
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 148984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5d80438d38b4f15837faf542a19225, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vertexCount: 3
-  radius: 1
-  size: {x: .699999988, y: 3}
-  pivot: {x: 0, y: .5}
-  rotation: 0
-  scale: {x: 1, y: 1}
-  sizingMethod: 1
 --- !u!114 &11481474
 MonoBehaviour:
   m_ObjectHideFlags: 1
