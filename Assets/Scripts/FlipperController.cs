@@ -2,33 +2,27 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class FlipperController : MonoBehaviour
-{
+public class FlipperController : MonoBehaviour {
     #region Editor Fields
 
     [Range(0, 800)]
     [Tooltip("Angular speed at which the flipper moves")]
     public float speed = 360;
-
     [Range(0, 360)]
     public float startAngle = 0;
-
     [Range(0, 360)]
     public float endAngle = 90;
-
     public bool mirror = false;
 
     #endregion
 
     #region Public Methods
 
-    public void Flip()
-    {
+    public void Flip() {
         rigidBody.angularVelocity = DesiredAngularVelocity;
     }
 
-    public void Fall()
-    {
+    public void Fall() {
         rigidBody.angularVelocity = -DesiredAngularVelocity;
     }
 
@@ -37,8 +31,7 @@ public class FlipperController : MonoBehaviour
 
     #region Public Properties
 
-    public float DesiredAngularVelocity
-    {
+    public float DesiredAngularVelocity {
         get { return speed * MirrorFlip; }
     }
 
@@ -68,26 +61,22 @@ public class FlipperController : MonoBehaviour
 
     #region Messages
 
-    void Awake()
-    {
+    void Awake() {
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
-    {
+    void Start() {
         SetInitialPosition();
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         if (ShouldFlipperStop) {
             float desiredAngle = ActualAngularVelocity > 0 ? ActualEndAngle : ActualStartAngle;
             rigidBody.MoveRotation(desiredAngle);
         }
     }
 
-    void Update()
-    {
+    void Update() {
         if (Input.GetButtonDown("Flippers")) {
             Flip();
         } else if (Input.GetButtonUp("Flippers")) {
@@ -95,16 +84,14 @@ public class FlipperController : MonoBehaviour
         }
     }
 
-    void OnValidate()
-    {
+    void OnValidate() {
         if (startAngle > endAngle) {
             startAngle = endAngle;
         }
         SetInitialPosition();
     }
 
-    void OnDrawGizmos()
-    {
+    void OnDrawGizmos() {
         var meshFilter = GetComponent<MeshFilter>();
         Gizmos.color = Color.red;
         Gizmos.DrawWireMesh(meshFilter.sharedMesh, transform.position, Quaternion.Euler(Vector3.forward * ActualEndAngle), transform.localScale);
@@ -116,8 +103,7 @@ public class FlipperController : MonoBehaviour
 
     #region Private Methods
 
-    void SetInitialPosition()
-    {
+    void SetInitialPosition() {
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, ActualStartAngle));
     }
 

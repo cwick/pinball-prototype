@@ -4,21 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 
 [RequireComponent(typeof(MeshFilter))]
-public class RectangleBuilder : MonoBehaviour
-{
+public class RectangleBuilder : MonoBehaviour {
     public float width = 1;
     public float height = 1;
     public float thickness = 0.5f;
 
     #region Messages
 
-    void Reset()
-    {
+    void Reset() {
         BuildMesh();
     }
 
-    public void OnValidate()
-    {
+    public void OnValidate() {
         if (width < 0) {
             width = 0;
         }
@@ -51,8 +48,7 @@ public class RectangleBuilder : MonoBehaviour
         get { return height / 2;}
     }
 
-    void BuildMesh()
-    {
+    void BuildMesh() {
         var filter = GetComponent<MeshFilter>();
         var mesh = new Mesh();
 
@@ -61,8 +57,7 @@ public class RectangleBuilder : MonoBehaviour
         filter.sharedMesh = mesh;
     }
 
-    Vector3[] BuildVertices()
-    {
+    Vector3[] BuildVertices() {
         var vertices = new Vector3[8] {
             new Vector3(-HalfWidth, -HalfHeight),
             new Vector3(-HalfWidth, HalfHeight),
@@ -72,16 +67,15 @@ public class RectangleBuilder : MonoBehaviour
         };
 
         var translate = Vector2.one * thickness;
-        vertices [4] = vertices [0] + new Vector3(translate.x, translate.y, 0);
-        vertices [5] = vertices [1] + new Vector3(translate.x, -translate.y, 0);
-        vertices [6] = vertices [2] + new Vector3(-translate.x, -translate.y, 0);
-        vertices [7] = vertices [3] + new Vector3(-translate.x, translate.y, 0);
+        vertices[4] = vertices[0] + new Vector3(translate.x, translate.y, 0);
+        vertices[5] = vertices[1] + new Vector3(translate.x, -translate.y, 0);
+        vertices[6] = vertices[2] + new Vector3(-translate.x, -translate.y, 0);
+        vertices[7] = vertices[3] + new Vector3(-translate.x, translate.y, 0);
 
         return vertices;
     }
 
-    int[] BuildTriangles()
-    {
+    int[] BuildTriangles() {
         var triangles = new List<int>();
 
         triangles.AddRange(TriangulateQuad(0, 1, 5, 4));
@@ -92,8 +86,7 @@ public class RectangleBuilder : MonoBehaviour
         return triangles.ToArray();
     }
 
-    void BuildCollider()
-    {
+    void BuildCollider() {
         var collider = GetComponent<PolygonCollider2D>();
         var filter = GetComponent<MeshFilter>();
         if (!collider) {
@@ -105,10 +98,10 @@ public class RectangleBuilder : MonoBehaviour
         var vertices = filter.sharedMesh.vertices;
 
         for (int i=0; i<outerPath.Length; i++) {
-            outerPath [i] = vertices [i];
+            outerPath[i] = vertices[i];
         }
         for (int i=0; i<innerPath.Length; i++) {
-            innerPath [i] = vertices [i + 4];
+            innerPath[i] = vertices[i + 4];
         }
 
         collider.pathCount = 2;
@@ -116,8 +109,7 @@ public class RectangleBuilder : MonoBehaviour
         collider.SetPath(1, innerPath);
     }
 
-    List<int> TriangulateQuad(int v0, int v1, int v2, int v3)
-    {
+    List<int> TriangulateQuad(int v0, int v1, int v2, int v3) {
         return new List<int>() { v0, v1, v2, v0, v2, v3 };
     }
 }

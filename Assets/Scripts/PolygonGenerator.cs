@@ -2,35 +2,31 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public interface IMeshChangedHandler : IEventSystemHandler
-{
+public interface IMeshChangedHandler : IEventSystemHandler {
     void OnMeshChanged();
 }
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class PolygonGenerator : MonoBehaviour
-{
+public class PolygonGenerator : MonoBehaviour {
     public int vertexCount = 3;
+
     private MeshFilter _meshFilter { get { return GetComponent<MeshFilter>(); } }
 
-    void OnValidate()
-    {
+    void OnValidate() {
         if (vertexCount < 3) {
             vertexCount = 3;
         }
     }
 
 #if UNITY_EDITOR
-    public void Generate()
-    {
+    public void Generate() {
         UnityEditor.Undo.RecordObject(_meshFilter, "Generate Mesh");
         GenerateMesh();
     }
 #endif
 
-    void GenerateMesh()
-    {
+    void GenerateMesh() {
         var mesh = new Mesh();
         mesh.vertices = BuildVertices();
         mesh.triangles = BuildTriangles();
@@ -41,8 +37,7 @@ public class PolygonGenerator : MonoBehaviour
         SendMeshChangedMessage(gameObject);
     }
 
-    Vector3[] BuildVertices()
-    {
+    Vector3[] BuildVertices() {
         var angleStep = -2 * Mathf.PI / vertexCount;
         var vertices = new Vector3[vertexCount];
         var rotation = (vertexCount % 2 == 0) ? 0 : Mathf.PI / 2;
@@ -58,8 +53,7 @@ public class PolygonGenerator : MonoBehaviour
         return vertices;
     }
 
-    int[] BuildTriangles()
-    {
+    int[] BuildTriangles() {
         var triangleCount = vertexCount - 2;
         var triangles = new int[triangleCount * 3];
 
@@ -73,8 +67,7 @@ public class PolygonGenerator : MonoBehaviour
         return triangles;
     }
 
-    void SendMeshChangedMessage(GameObject gameObject)
-    {
+    void SendMeshChangedMessage(GameObject gameObject) {
         ExecuteEvents.Execute<IMeshChangedHandler>(gameObject, null, (component, e) => component.OnMeshChanged());
     }
 }
