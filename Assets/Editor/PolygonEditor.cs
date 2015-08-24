@@ -4,12 +4,10 @@ using UnityEditor;
 using UnityEngine.EventSystems;
 
 [CustomEditor(typeof(MeshFilter))]
-public class PolygonEditor : Editor
-{
+public class PolygonEditor : Editor {
     private bool _editMode = false;
 
-    public void OnSceneGUI()
-    {
+    public void OnSceneGUI() {
         if (!_editMode) {
             return;
         }
@@ -38,8 +36,7 @@ public class PolygonEditor : Editor
         }
     }
 
-    public override void OnInspectorGUI()
-    {
+    public override void OnInspectorGUI() {
         DrawDefaultInspector();
 
         _editMode = GUILayout.Toggle(_editMode, "Edit Vertices", "Button");
@@ -47,13 +44,11 @@ public class PolygonEditor : Editor
         SceneView.RepaintAll();
     }
 
-    public void OnDisable()
-    {
+    public void OnDisable() {
         Tools.hidden = false;
     }
 
-    void SendMeshChangedMessage(GameObject gameObject)
-    {
+    void SendMeshChangedMessage(GameObject gameObject) {
         ExecuteEvents.Execute<IMeshChangedHandler>(gameObject, null, (component, e) => component.OnMeshChanged());
     }
 }
