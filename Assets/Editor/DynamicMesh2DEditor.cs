@@ -8,23 +8,6 @@ namespace DynamicMesh2D {
     public class DynamicMesh2DEditor : Editor {
         private DynamicMesh2DEditorPrivate _editor;
 
-        private DynamicMesh2DEditorPrivate PrivateEditor {
-            get { 
-                if (_editor == null) {
-                    _editor = new DynamicMesh2DEditorPrivate(Mesh, DynamicMesh2DComponent.transform);
-                }
-                return _editor;
-            }
-        }
-
-        private Mesh Mesh {
-            get { return DynamicMesh2DComponent.GetComponent<MeshFilter>().sharedMesh; }
-        }
-
-        private DynamicMesh2DComponent DynamicMesh2DComponent {
-            get { return (DynamicMesh2DComponent)target; }
-        }
-
         public override void OnInspectorGUI() {
             PrivateEditor.OnGUI(); 
         }
@@ -43,6 +26,23 @@ namespace DynamicMesh2D {
 
         private void OnEnable() {
             PrivateEditor.OnEnable();
+        }
+
+        private DynamicMesh2DEditorPrivate PrivateEditor {
+            get { 
+                if (_editor == null) {
+                    _editor = new DynamicMesh2DEditorPrivate(Mesh, DynamicMesh2DComponent.transform);
+                }
+                return _editor;
+            }
+        }
+
+        private Mesh Mesh {
+            get { return DynamicMesh2DComponent.GetComponent<MeshFilter>().sharedMesh; }
+        }
+
+        private DynamicMesh2DComponent DynamicMesh2DComponent {
+            get { return (DynamicMesh2DComponent)target; }
         }
     }
 }
