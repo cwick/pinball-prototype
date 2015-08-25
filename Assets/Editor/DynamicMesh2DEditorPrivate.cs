@@ -29,12 +29,15 @@ namespace DynamicMesh2D {
         public void OnSceneGUI() {
             if (_isEditMode) {
                 StealMouseInput();
-                
-                Handles.BeginGUI();
-                
-                DrawSceneGUI();
-                
-                Handles.EndGUI();
+
+                foreach (var vertex in _mesh.vertices) {
+                    DrawVertex(vertex);
+                }
+//                Handles.BeginGUI();
+//                
+//                DrawSceneGUI();
+//                
+//                Handles.EndGUI();
             }
             
             Tools.hidden = _isEditMode;
@@ -50,6 +53,36 @@ namespace DynamicMesh2D {
                 var rect = new Rect(guiPoint, Vector2.one * vertexHandleSize);
                 EditorGUI.DrawRect(rect, Color.gray);
             }
+        }
+
+        private void DrawVertex(Vector3 vertex) {
+            Vector3 worldVertex = _meshTransform.localToWorldMatrix.MultiplyPoint3x4(vertex);
+            Vector2 screenPoint = Camera.current.WorldToScreenPoint(worldVertex);
+            DrawRect(screenPoint);
+        }
+
+        private void DrawRect(Vector2 point) {
+            var shader = Shader.Find("Hidden/Internal-Colored");
+            var material = new Material(shader);
+            material.hideFlags = HideFlags.HideAndDontSave;
+            material.SetInt("_ZWrite", 0);
+            material.SetInt("_ZTest", (int)UnityEngine.Rendering.CompareFunction.Always);
+
+            material.SetPass(0);
+            GL.PushMatrix();
+
+            GL.LoadPixelMatrix();
+            GL.Begin(GL.QUADS);
+            GL.Color(Color.red);
+
+            GL.Vertex3(point.x - 5,point.y-5,0);
+            GL.Vertex3(point.x+5,point.y-5,0);
+            GL.Vertex3(point.x+5,point.y+5,0);
+            GL.Vertex3(point.x-5,point.y+5,0);
+
+            GL.End();
+
+            GL.PopMatrix();
         }
         
         private void OnSelectionChange() {
