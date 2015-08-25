@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 
 namespace DynamicMesh2D {
@@ -8,10 +9,28 @@ namespace DynamicMesh2D {
 
         public static void DrawVertexHandle(Vector3 vertex) {
             Vector2 screenPoint = Camera.current.WorldToScreenPoint(vertex);
-            DrawScreenRect(screenPoint);
+            DrawScreenVertexHandle(screenPoint);
         }
 
-        private static void DrawScreenRect(Vector2 location) {
+        public static void DrawSelectionRectangle(Rect selection) {
+            var style = new GUIStyle ("SelectionRect");
+
+            // GUI doesn't like negative widths or heights
+            if (selection.width < 0) {
+                selection.width *= -1;
+                selection.position = new Vector2(selection.position.x - selection.width, selection.position.y);
+            }
+            if (selection.height < 0) {
+                selection.height *= -1;
+                selection.position = new Vector2(selection.position.x, selection.position.y - selection.height);
+            }
+
+            Handles.BeginGUI();
+            style.Draw(selection, GUIContent.none, false, false, false, false);
+            Handles.EndGUI();
+        }
+
+        private static void DrawScreenVertexHandle(Vector2 location) {
             var handleSize = 6;
             var halfSize = handleSize / 2;
 
