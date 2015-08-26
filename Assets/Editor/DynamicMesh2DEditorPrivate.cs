@@ -59,13 +59,11 @@ namespace DynamicMesh2D {
                     break;
                 case EventType.MouseUp:
                     if (Event.current.button == LEFT_MOUSE_BUTTON) {
-                        if (_isDragging) {
-                            _selectedVertices = GetSelectedVertices();
-                        }
-                        _isDragging = false;
-                        _dragStart = null;
-                        SceneView.RepaintAll();
+                        FinishDragging();
                     }
+                    break;
+                case EventType.Ignore:
+                    FinishDragging();
                     break;
                 case EventType.Repaint:
                     DrawSceneGUI();
@@ -86,6 +84,15 @@ namespace DynamicMesh2D {
             }
 
             DrawSelectedVertices();
+        }
+
+        private void FinishDragging() {
+            if (_isDragging) {
+                _selectedVertices = GetSelectedVertices();
+            }
+            _isDragging = false;
+            _dragStart = null;
+            SceneView.RepaintAll();
         }
 
         private void ToggleEditModeFromButton() {
