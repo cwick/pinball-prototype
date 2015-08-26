@@ -8,7 +8,7 @@ namespace DynamicMesh2D {
         private bool _isDragging = false;
         private Mesh _mesh;
         private Transform _meshTransform;
-        private Vector2 _dragBegin;
+        private Vector2? _dragStart;
         private Rect _selectionRectangle;
         private Vector3[] _selectedVertices = new Vector3[0];
 
@@ -46,13 +46,13 @@ namespace DynamicMesh2D {
             switch (Event.current.type) {
                 case EventType.MouseDown:
                     if (Event.current.button == LEFT_MOUSE_BUTTON && !Event.current.alt) {
-                        _dragBegin = Event.current.mousePosition;
+                        _dragStart = Event.current.mousePosition;
                         _isDragging = false;
                     }
                     break;
                 case EventType.MouseDrag:
-                    if (Event.current.button == LEFT_MOUSE_BUTTON && GUIUtility.hotControl == 0) {
-                        _selectionRectangle = new Rect(_dragBegin, Event.current.mousePosition - _dragBegin);
+                    if (Event.current.button == LEFT_MOUSE_BUTTON && GUIUtility.hotControl == 0 && _dragStart.HasValue) {
+                        _selectionRectangle = new Rect(_dragStart.Value, Event.current.mousePosition - _dragStart.Value);
                         _isDragging = true;
                         SceneView.RepaintAll();
                     }
@@ -63,6 +63,7 @@ namespace DynamicMesh2D {
                             _selectedVertices = GetSelectedVertices();
                         }
                         _isDragging = false;
+                        _dragStart = null;
                         SceneView.RepaintAll();
                     }
                     break;
@@ -121,7 +122,11 @@ namespace DynamicMesh2D {
             if (_selectedVertices.Length == 0) {
                 return;
             }
-            _selectedVertices[0] = Handles.PositionHandle(_selectedVertices[0], Quaternion.identity);
+            var bounds = new Bounds(_selectedVertices[0], Vector3.zero);
+            foreach (var vertex in _selectedVertices) {
+                bounds.Encapsulate(vertex); 
+            }
+            Handles.PositionHandle(bounds.center, Quaternion.identity);
         }
     }
 }
