@@ -6,14 +6,14 @@ namespace DynamicMesh2D {
     public static class Utils {
         private static Shader _simpleColorShader;
         private static Material _simpleColorMaterial;
+        private static GUIStyle _selectionRectangleStyle;
 
-        public static void DrawVertexHandle(Vector3 vertex) {
+        public static void DrawVertexHandle(Vector3 vertex, Color color) {
             Vector2 screenPoint = Camera.current.WorldToScreenPoint(vertex);
-            DrawScreenVertexHandle(screenPoint);
+            DrawScreenVertexHandle(screenPoint, color);
         }
 
         public static void DrawSelectionRectangle(Rect selection) {
-            var style = new GUIStyle ("SelectionRect");
 
             // GUI doesn't like negative widths or heights
             if (selection.width < 0) {
@@ -26,11 +26,11 @@ namespace DynamicMesh2D {
             }
 
             Handles.BeginGUI();
-            style.Draw(selection, GUIContent.none, false, false, false, false);
+            SelectionRectangleStyle.Draw(selection, GUIContent.none, false, false, false, false);
             Handles.EndGUI();
         }
 
-        private static void DrawScreenVertexHandle(Vector2 location) {
+        private static void DrawScreenVertexHandle(Vector2 location, Color color) {
             var handleSize = 6;
             var halfSize = handleSize / 2;
 
@@ -40,7 +40,7 @@ namespace DynamicMesh2D {
 
             GL.LoadPixelMatrix();
             GL.Begin(GL.QUADS);
-            GL.Color(Color.gray);
+            GL.Color(color);
 
             GL.Vertex3(location.x - halfSize, location.y - halfSize, 0);
             GL.Vertex3(location.x + halfSize, location.y - halfSize, 0);
@@ -50,6 +50,15 @@ namespace DynamicMesh2D {
             GL.End();
 
             GL.PopMatrix();
+        }
+
+        private static GUIStyle SelectionRectangleStyle {
+            get {
+                if (_selectionRectangleStyle == null) {
+                    _selectionRectangleStyle = new GUIStyle ("SelectionRect");
+                }
+                return _selectionRectangleStyle;
+            }
         }
 
         private static Shader SimpleColorShader {
