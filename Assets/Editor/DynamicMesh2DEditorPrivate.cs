@@ -9,6 +9,7 @@ namespace DynamicMesh2D {
         private Mesh _mesh;
         private Transform _meshTransform;
         private Vector2 _dragBegin;
+        private Rect _selectionRectangle;
 
         private const int LEFT_MOUSE_BUTTON = 0;
 
@@ -31,46 +32,49 @@ namespace DynamicMesh2D {
         }
 
         public void OnSceneGUI() {
-            if (_isEditMode) {
-                StealMouseInput();
+            Tools.hidden = _isEditMode;
 
-                switch (Event.current.type) {
-                    case EventType.MouseDown:
-                        if (Event.current.button == LEFT_MOUSE_BUTTON) {
-                            Event.current.Use();
-                            _dragBegin = Event.current.mousePosition;
-                        }
-                        break;
-                    case EventType.MouseDrag:
-                        if (Event.current.button == LEFT_MOUSE_BUTTON) {
-                            Event.current.Use();
-                            _isDragging = true;
-                        }
-                        break;
-                    case EventType.MouseUp:
-                        if (Event.current.button == LEFT_MOUSE_BUTTON) {
-                            _isDragging = false;
-                            SceneView.RepaintAll();
-                        }
-                        break;
-                    case EventType.Repaint:
-                        if (_isDragging) { 
-                            Rect selectionRectangle = new Rect(_dragBegin, Event.current.mousePosition - _dragBegin);
-                            DynamicMesh2D.Utils.DrawSelectionRectangle(selectionRectangle);
-                        }
-                        break;
-                }
-
-                DrawSceneGUI();
+            if (!_isEditMode) {
+                return;
             }
 
-            Tools.hidden = _isEditMode;
+            StealMouseInput();
+
+            switch (Event.current.type) {
+                case EventType.MouseDown:
+                    if (Event.current.button == LEFT_MOUSE_BUTTON) {
+                        Event.current.Use();
+                        _dragBegin = Event.current.mousePosition;
+                        _isDragging = false;
+                    }
+                    break;
+                case EventType.MouseDrag:
+                    if (Event.current.button == LEFT_MOUSE_BUTTON) {
+                        Event.current.Use();
+                        _selectionRectangle = new Rect(_dragBegin, Event.current.mousePosition - _dragBegin);
+                        _isDragging = true;
+                    }
+                    break;
+                case EventType.MouseUp:
+                    if (Event.current.button == LEFT_MOUSE_BUTTON) {
+                        _isDragging = false;
+                        SceneView.RepaintAll();
+                    }
+                    break;
+                case EventType.Repaint:
+                    DrawSceneGUI();
+                    break;
+            }
         }
 
         private void DrawSceneGUI() {
             foreach (var localVertex in _mesh.vertices) {
                 Vector3 worldVertex = _meshTransform.localToWorldMatrix.MultiplyPoint3x4(localVertex);
                 DynamicMesh2D.Utils.DrawVertexHandle(worldVertex);
+            }
+
+            if (_isDragging) { 
+                DynamicMesh2D.Utils.DrawSelectionRectangle(_selectionRectangle);
             }
         }
 
