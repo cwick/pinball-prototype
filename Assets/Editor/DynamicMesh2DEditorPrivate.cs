@@ -13,6 +13,7 @@ namespace DynamicMesh2D {
         private Vector3[] _selectedVertices = new Vector3[0];
 
         private const int LEFT_MOUSE_BUTTON = 0;
+        private const int VERTEX_HANDLE_SIZE = 6;
         private readonly Color VERTEX_HANDLE_COLOR = Color.gray;
         private readonly Color VERTEX_HANDLE_SELECTED_COLOR = Color.yellow;
 
@@ -49,6 +50,7 @@ namespace DynamicMesh2D {
                         _dragStart = Event.current.mousePosition;
                         _isDragging = false;
                     }
+                    SceneView.RepaintAll();
                     break;
                 case EventType.MouseDrag:
                     if (Event.current.button == LEFT_MOUSE_BUTTON && GUIUtility.hotControl == 0 && _dragStart.HasValue) {
@@ -59,11 +61,17 @@ namespace DynamicMesh2D {
                     break;
                 case EventType.MouseUp:
                     if (Event.current.button == LEFT_MOUSE_BUTTON) {
-                        FinishDragging();
+                        if (_isDragging) {
+                            CompleteSelection(_selectionRectangle);
+                        } else {
+                            CompleteSelection(MouseClickRectangle);
+                        }
                     }
                     break;
                 case EventType.Ignore:
-                    FinishDragging();
+                    if (_isDragging) {
+                        CompleteSelection(_selectionRectangle);
+                    }
                     break;
                 case EventType.Repaint:
                     DrawSceneGUI();
@@ -73,10 +81,18 @@ namespace DynamicMesh2D {
             DrawVertexTranslationHandle();
         }
 
+        private Rect MouseClickRectangle {
+            get {
+                float size = VERTEX_HANDLE_SIZE * 2.5f;
+                return new Rect(Event.current.mousePosition - Vector2.one * (size+2) / 2.0f,
+                                Vector2.one * size);
+            }
+        }
+
         private void DrawSceneGUI() {
             foreach (var localVertex in _mesh.vertices) {
                 Vector3 worldVertex = _meshTransform.TransformPoint(localVertex);
-                DynamicMesh2D.Utils.DrawVertexHandle(worldVertex, VERTEX_HANDLE_COLOR);
+                DrawVertexSelectionHandle(worldVertex, VERTEX_HANDLE_COLOR);
             }
 
             if (_isDragging) { 
@@ -86,10 +102,8 @@ namespace DynamicMesh2D {
             DrawSelectedVertices();
         }
 
-        private void FinishDragging() {
-            if (_isDragging) {
-                _selectedVertices = GetSelectedVertices();
-            }
+        private void CompleteSelection(Rect rectangle) {
+            _selectedVertices = GetSelectedVertices(rectangle);
             _isDragging = false;
             _dragStart = null;
             SceneView.RepaintAll();
@@ -104,14 +118,14 @@ namespace DynamicMesh2D {
             HandleUtility.AddDefaultControl(controlID);
         }
 
-        private Vector3[] GetSelectedVertices() {
+        private Vector3[] GetSelectedVertices(Rect rectangle) {
             var selected = new List<Vector3>();
 
             foreach (var localVertex in _mesh.vertices) {
                 var worldVertex = _meshTransform.TransformPoint(localVertex);
                 var guiVertex = HandleUtility.WorldToGUIPoint(worldVertex);
 
-                if (_selectionRectangle.Contains(guiVertex, true)) {
+                if (rectangle.Contains(guiVertex, true)) {
                     selected.Add(worldVertex);
                 }
             }
@@ -121,7 +135,7 @@ namespace DynamicMesh2D {
 
         private void DrawSelectedVertices() {
             foreach (var vertex in _selectedVertices) {
-                DynamicMesh2D.Utils.DrawVertexHandle(vertex, VERTEX_HANDLE_SELECTED_COLOR);
+                DrawVertexSelectionHandle(vertex, VERTEX_HANDLE_SELECTED_COLOR);
             }
         }
 
@@ -134,6 +148,10 @@ namespace DynamicMesh2D {
                 bounds.Encapsulate(vertex); 
             }
             Handles.PositionHandle(bounds.center, Quaternion.identity);
+        }
+
+        private void DrawVertexSelectionHandle(Vector3 vertex, Color color) {
+            DynamicMesh2D.Utils.DrawVertexHandle(vertex, color, VERTEX_HANDLE_SIZE);
         }
     }
 }

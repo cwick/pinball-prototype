@@ -8,9 +8,9 @@ namespace DynamicMesh2D {
         private static Material _simpleColorMaterial;
         private static GUIStyle _selectionRectangleStyle;
 
-        public static void DrawVertexHandle(Vector3 vertex, Color color) {
+        public static void DrawVertexHandle(Vector3 vertex, Color color, int size) {
             Vector2 screenPoint = Camera.current.WorldToScreenPoint(vertex);
-            DrawScreenVertexHandle(screenPoint, color);
+            DrawScreenVertexHandle(screenPoint, color, size);
         }
 
         public static void DrawSelectionRectangle(Rect selection) {
@@ -30,9 +30,8 @@ namespace DynamicMesh2D {
             Handles.EndGUI();
         }
 
-        private static void DrawScreenVertexHandle(Vector2 location, Color color) {
-            var handleSize = 6;
-            var halfSize = handleSize / 2;
+        private static void DrawScreenVertexHandle(Vector2 location, Color color, int size) {
+            var halfSize = size / 2.0f;
 
             SimpleColorMaterial.SetPass(0);
 
