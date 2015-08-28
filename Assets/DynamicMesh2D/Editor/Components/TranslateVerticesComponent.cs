@@ -29,12 +29,12 @@ namespace DynamicMesh2D {
             }
         }
 
-        private void TranslateVertices(Vector3 amount) {
+        private void TranslateVertices(Vector2 amount) {
             var mesh = Editor.Mesh;
             var vertices = Editor.VerticesWorldPositions;
 
             foreach (var i in Editor.SelectedVertices) {
-                vertices[i] += amount;
+                vertices[i] += new Vector3(amount.x, amount.y, 0);
             }
 
             RecordUndoForTranslatedVertexCount(mesh, Editor.SelectedVertices.Length);
