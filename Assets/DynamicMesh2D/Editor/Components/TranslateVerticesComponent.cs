@@ -15,7 +15,7 @@ namespace DynamicMesh2D {
         }
         
         public override bool ShouldProcessEvent(Event e) {
-            return Editor.SelectedVertices.Length > 0;
+            return Editor.SelectedVertices.Count > 0;
         }
         
         private void DrawVertexTranslationHandle() {
@@ -37,7 +37,7 @@ namespace DynamicMesh2D {
                 vertices[i] += new Vector3(amount.x, amount.y, 0);
             }
 
-            RecordUndoForTranslatedVertexCount(mesh, Editor.SelectedVertices.Length);
+            RecordUndoForTranslatedVertexCount(mesh, Editor.SelectedVertices.Count);
 
             mesh.vertices = Editor.WorldVerticesToLocalVertices(vertices);
             mesh.RecalculateBounds();

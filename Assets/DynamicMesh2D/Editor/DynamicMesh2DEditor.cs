@@ -9,9 +9,9 @@ namespace DynamicMesh2D {
         private Mesh _mesh;
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
-        private int[] _selectedVertices = new int[0];
+        private HashSet<int> _selectedVertices = new HashSet<int>();
         
-        public int[] SelectedVertices {
+        public HashSet<int> SelectedVertices {
             get { return _selectedVertices; }
             set {
                 _selectedVertices = value;
@@ -75,8 +75,8 @@ namespace DynamicMesh2D {
             }
         }
         
-        public int[] GetVerticesInRect(Rect rectangle) {
-            var selected = new List<int>();
+        public HashSet<int> GetVerticesInRect(Rect rectangle) {
+            var selected = new HashSet<int>();
 
             int i=0;
             foreach (var localVertex in _mesh.vertices) {
@@ -89,8 +89,8 @@ namespace DynamicMesh2D {
 
                 i++;
             }
-            
-            return selected.ToArray();
+
+            return selected;
         }
 
         public Vector3[] WorldVerticesToLocalVertices(Vector3[] worldVertices) {

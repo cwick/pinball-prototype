@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace DynamicMesh2D {
     class SingleVertexSelectComponent : EditorComponent {
