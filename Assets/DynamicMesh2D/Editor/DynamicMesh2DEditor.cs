@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DynamicMesh2D {
     [CustomEditor(typeof(DynamicMesh2DComponent))]
@@ -8,16 +9,36 @@ namespace DynamicMesh2D {
         private Mesh _mesh;
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
-        private Vector3[] _selectedVertices = new Vector3[0];
+        private int[] _selectedVertices = new int[0];
         
-        public Vector3[] SelectedVertices {
+        public int[] SelectedVertices {
             get { return _selectedVertices; }
             set {
                 _selectedVertices = value;
                 SceneView.RepaintAll();
             }
         }
-        
+
+        public Vector3[] SelectedVerticesLocalPositions {
+            get { 
+                var vertices = Mesh.vertices;
+                return _selectedVertices.Select( (i) => vertices[i] ).ToArray();
+            }
+        }
+
+        public Vector3[] SelectedVerticesWorldPositions {
+            get {
+                var localVertices = SelectedVerticesLocalPositions;
+                return localVertices.Select( (v) => MeshTransform.TransformPoint(v) ).ToArray();
+            }
+        }
+
+        public Vector3[] VerticesWorldPositions {
+            get {
+                return Mesh.vertices.Select( (v) => _meshTransform.TransformPoint(v) ).ToArray();
+            }
+        }
+
         public Mesh Mesh {
             get { return _mesh; }
         }
@@ -54,16 +75,19 @@ namespace DynamicMesh2D {
             }
         }
         
-        public Vector3[] GetVerticesInRect(Rect rectangle) {
-            var selected = new List<Vector3>();
-            
+        public int[] GetVerticesInRect(Rect rectangle) {
+            var selected = new List<int>();
+
+            int i=0;
             foreach (var localVertex in _mesh.vertices) {
                 var worldVertex = _meshTransform.TransformPoint(localVertex);
                 var guiVertex = HandleUtility.WorldToGUIPoint(worldVertex);
                 
                 if (rectangle.Contains(guiVertex, true)) {
-                    selected.Add(worldVertex);
+                    selected.Add(i);
                 }
+
+                i++;
             }
             
             return selected.ToArray();

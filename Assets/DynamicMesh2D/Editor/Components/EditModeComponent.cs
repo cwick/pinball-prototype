@@ -20,7 +20,9 @@ namespace DynamicMesh2D {
         }
         
         public override void OnGUI() {
-            ToggleEditModeFromButton();
+            if (Editor.Mesh != null) {
+                ToggleEditModeFromButton();
+            }
         }
         
         public override bool ShouldProcessEvent(Event e) {
@@ -29,6 +31,7 @@ namespace DynamicMesh2D {
         
         private void ToggleEditModeFromButton() {
             _isEditMode = GUILayout.Toggle(_isEditMode, "Edit Mode", "Button");
+            SceneView.RepaintAll();
         }
         
         private void CaptureControlInput() {

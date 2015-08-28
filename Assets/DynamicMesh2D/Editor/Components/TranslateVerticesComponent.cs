@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Linq;
 
 namespace DynamicMesh2D {
     class TranslateVerticesComponent : EditorComponent {
@@ -18,11 +19,26 @@ namespace DynamicMesh2D {
         }
         
         private void DrawVertexTranslationHandle() {
-            var bounds = new Bounds(Editor.SelectedVertices[0], Vector3.zero);
-            foreach (var vertex in Editor.SelectedVertices) {
+            var selectedVertices = Editor.SelectedVerticesWorldPositions;
+            var bounds = new Bounds(selectedVertices[0], Vector3.zero);
+
+            foreach (var vertex in selectedVertices) {
                 bounds.Encapsulate(vertex);
             }
-            Handles.PositionHandle(bounds.center, Quaternion.identity);
+
+            var oldPosition = bounds.center;
+            var newPosition = Handles.PositionHandle(bounds.center, Quaternion.identity);
+            var delta = newPosition - oldPosition;
+
+            TranslateVertices(delta);
+        }
+
+        private void TranslateVertices(Vector3 amount) {
+            var translatedVertices = Editor.VerticesWorldPositions.Select( (v) => v + amount );
+            var mesh = Editor.Mesh;
+
+            mesh.vertices = translatedVertices.Select( (v) => Editor.MeshTransform.InverseTransformPoint(v) ).ToArray();
+            mesh.RecalculateBounds();
         }
     }
 }

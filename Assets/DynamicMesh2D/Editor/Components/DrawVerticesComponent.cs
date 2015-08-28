@@ -22,15 +22,14 @@ namespace DynamicMesh2D {
         }
         
         private void DrawSelectedVertices() {
-            foreach (var vertex in Editor.SelectedVertices) {
+            foreach (var vertex in Editor.SelectedVerticesWorldPositions) {
                 DrawVertexSelectionHandle(vertex, VERTEX_HANDLE_SELECTED_COLOR);
             }
         }
         
         private void DrawVertexSelectionHandles() {
-            foreach (var localVertex in Editor.Mesh.vertices) {
-                Vector3 worldVertex = Editor.MeshTransform.TransformPoint(localVertex);
-                DrawVertexSelectionHandle(worldVertex, VERTEX_HANDLE_COLOR);
+            foreach (var vertex in Editor.VerticesWorldPositions) {
+                DrawVertexSelectionHandle(vertex, VERTEX_HANDLE_COLOR);
             }
         }
         
