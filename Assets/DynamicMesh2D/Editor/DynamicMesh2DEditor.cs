@@ -39,6 +39,12 @@ namespace DynamicMesh2D {
             }
         }
 
+        public Vector2[] VerticesGUIPositions {
+            get {
+                return Mesh.vertices.Select( (v) => HandleUtility.WorldToGUIPoint(_meshTransform.TransformPoint(v)) ).ToArray();
+            }
+        }
+
         public Mesh Mesh {
             get { return _mesh; }
         }
@@ -79,11 +85,8 @@ namespace DynamicMesh2D {
             var selected = new HashSet<int>();
 
             int i=0;
-            foreach (var localVertex in _mesh.vertices) {
-                var worldVertex = _meshTransform.TransformPoint(localVertex);
-                var guiVertex = HandleUtility.WorldToGUIPoint(worldVertex);
-                
-                if (rectangle.Contains(guiVertex, true)) {
+            foreach (var vertex in VerticesGUIPositions) {
+                if (rectangle.Contains(vertex, true)) {
                     selected.Add(i);
                 }
 
@@ -91,6 +94,26 @@ namespace DynamicMesh2D {
             }
 
             return selected;
+        }
+
+        public int? GetClosestVertexInRect(Rect rectangle) {
+            int i=0;
+            float minDistance = float.MaxValue;
+            int? closestVertex = null;
+
+            foreach (var vertex in VerticesGUIPositions) { 
+                if (rectangle.Contains(vertex, true)) {
+                    var distance = Mathf.Min(Vector2.Distance(vertex, rectangle.center), minDistance);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestVertex = i;
+                    }
+                }
+
+                i++;
+            }
+
+            return closestVertex;
         }
 
         public Vector3[] WorldVerticesToLocalVertices(Vector3[] worldVertices) {

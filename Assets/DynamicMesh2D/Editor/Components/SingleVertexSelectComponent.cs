@@ -16,8 +16,7 @@ namespace DynamicMesh2D {
                 _clickBegin = false;
             } else if (Event.current.type == EventType.MouseUp && _clickBegin) {
                 _clickBegin = false;
-                Editor.SelectedVertices = Editor.GetVerticesInRect(MouseClickRectangle);
-                SceneView.RepaintAll();
+                ConfirmSelection();
             }
             
             return true;
@@ -26,7 +25,16 @@ namespace DynamicMesh2D {
         public override bool ShouldProcessEvent(Event e) {
             return base.ShouldProcessEvent(e) && (MouseButton)e.button == MouseButton.LEFT && !e.alt;
         }
-        
+
+        private void ConfirmSelection() {
+            var closestVertex = Editor.GetClosestVertexInRect(MouseClickRectangle);
+            var selectedVertices = new HashSet<int>();
+            if (closestVertex.HasValue) {
+                selectedVertices.Add(closestVertex.Value);
+            }
+            Editor.SelectedVertices = selectedVertices;
+        }
+
         private Rect MouseClickRectangle {
             get {
                 float size = DrawVerticesComponent.VERTEX_HANDLE_SIZE * 2.5f;
