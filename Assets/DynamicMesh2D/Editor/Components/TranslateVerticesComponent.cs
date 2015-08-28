@@ -20,27 +20,36 @@ namespace DynamicMesh2D {
         
         private void DrawVertexTranslationHandle() {
             var selectedVertices = Editor.SelectedVerticesWorldPositions;
-            var bounds = new Bounds(selectedVertices[0], Vector3.zero);
-
-            foreach (var vertex in selectedVertices) {
-                bounds.Encapsulate(vertex);
-            }
-
-            var oldPosition = bounds.center;
-            var newPosition = Handles.PositionHandle(bounds.center, Quaternion.identity);
+            var oldPosition = GetCenterOfFace(selectedVertices);
+            var newPosition = Handles.PositionHandle(oldPosition, Quaternion.identity);
             var delta = newPosition - oldPosition;
 
-            TranslateVertices(delta);
+            if (delta != Vector3.zero) {
+                TranslateVertices(delta);
+            }
         }
 
         private void TranslateVertices(Vector3 amount) {
-            var translatedVertices = Editor.VerticesWorldPositions.Select( (v) => v + amount );
             var mesh = Editor.Mesh;
+            var vertices = Editor.VerticesWorldPositions;
 
-            Undo.RecordObject(mesh, "Translate Vertices");
+            foreach (var i in Editor.SelectedVertices) {
+                vertices[i] += amount;
+            }
 
-            mesh.vertices = translatedVertices.Select( (v) => Editor.MeshTransform.InverseTransformPoint(v) ).ToArray();
+            RecordUndoForTranslatedVertexCount(mesh, Editor.SelectedVertices.Length);
+
+            mesh.vertices = Editor.WorldVerticesToLocalVertices(vertices);
             mesh.RecalculateBounds();
+        }
+
+        private void RecordUndoForTranslatedVertexCount(Mesh mesh, int count) {
+            var message = count == 1 ? "Translate Vertex" : "Translate Vertices";
+            Undo.RecordObject(mesh, message);
+        }
+
+        private Vector3 GetCenterOfFace(Vector3[] vertices) {
+            return vertices.Aggregate(Vector3.zero, (v1, v2) => v1 + v2) / vertices.Length;
         }
     }
 }

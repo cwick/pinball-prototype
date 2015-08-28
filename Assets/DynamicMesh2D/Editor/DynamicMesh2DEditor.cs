@@ -92,5 +92,9 @@ namespace DynamicMesh2D {
             
             return selected.ToArray();
         }
+
+        public Vector3[] WorldVerticesToLocalVertices(Vector3[] worldVertices) {
+            return worldVertices.Select( (v) => MeshTransform.InverseTransformPoint(v) ).ToArray();
+        }
     }
 }
