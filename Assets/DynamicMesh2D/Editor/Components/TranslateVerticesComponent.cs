@@ -37,6 +37,8 @@ namespace DynamicMesh2D {
             var translatedVertices = Editor.VerticesWorldPositions.Select( (v) => v + amount );
             var mesh = Editor.Mesh;
 
+            Undo.RecordObject(mesh, "Translate Vertices");
+
             mesh.vertices = translatedVertices.Select( (v) => Editor.MeshTransform.InverseTransformPoint(v) ).ToArray();
             mesh.RecalculateBounds();
         }
