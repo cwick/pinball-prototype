@@ -29,9 +29,19 @@ namespace DynamicMesh2D {
         private void ConfirmSelection() {
             var closestVertex = Editor.GetClosestVertexInRect(MouseClickRectangle);
             var selectedVertices = new HashSet<int>();
+
             if (closestVertex.HasValue) {
-                selectedVertices.Add(closestVertex.Value);
+                if (Event.current.shift) {
+                    selectedVertices = Editor.SelectedVertices;
+                }
+
+                if (selectedVertices.Contains(closestVertex.Value)) {
+                    selectedVertices.Remove(closestVertex.Value);
+                } else {
+                    selectedVertices.Add(closestVertex.Value);
+                }
             }
+
             Editor.SelectedVertices = selectedVertices;
         }
 
