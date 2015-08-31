@@ -16,7 +16,7 @@ namespace DynamicMesh2D {
                 _clickBegin = false;
             } else if (Event.current.type == EventType.MouseUp && _clickBegin) {
                 _clickBegin = false;
-                ConfirmSelection();
+                CompleteSelection();
             }
             
             return true;
@@ -26,7 +26,7 @@ namespace DynamicMesh2D {
             return base.ShouldProcessEvent(e) && (MouseButton)e.button == MouseButton.LEFT && !e.alt;
         }
 
-        private void ConfirmSelection() {
+        private void CompleteSelection() {
             var closestVertex = Editor.GetClosestVertexInRect(MouseClickRectangle);
             var selectedVertices = new HashSet<int>();
 

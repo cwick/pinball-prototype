@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DynamicMesh2D {
     class BoxVertexSelectComponent : EditorComponent {
@@ -50,7 +51,12 @@ namespace DynamicMesh2D {
         }
         
         private void CompleteSelection() {
-            Editor.SelectedVertices = Editor.GetVerticesInRect(_selectionRectangle);
+            IEnumerable<int> selectedVertices = Editor.GetVerticesInRect(_selectionRectangle);
+            if (Event.current.shift) {
+                selectedVertices = selectedVertices.Concat(Editor.SelectedVertices);
+            }
+            Editor.SelectedVertices = new HashSet<int>(selectedVertices);
+
             _isDragging = false;
             _dragStart = null;
         }
