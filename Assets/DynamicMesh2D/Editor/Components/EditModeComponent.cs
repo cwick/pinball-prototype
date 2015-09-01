@@ -11,6 +11,8 @@ namespace DynamicMesh2D {
         
         public override bool ProcessSceneEvents() {
             Tools.hidden = _isEditMode;
+            Editor.DynamicMesh2DComponent.ShouldDrawPivot = _isEditMode;
+
             if (!_isEditMode) {
                 return false;
             }

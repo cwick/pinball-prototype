@@ -52,7 +52,11 @@ namespace DynamicMesh2D {
         public Transform MeshTransform {
             get { return _meshTransform; }
         }
-        
+
+        public DynamicMesh2DComponent DynamicMesh2DComponent {
+            get { return _meshTransform.GetComponent<DynamicMesh2DComponent>(); }
+        }
+
         public override void OnInspectorGUI() {
             foreach (var component in _editorComponents) {
                 component.OnGUI();
