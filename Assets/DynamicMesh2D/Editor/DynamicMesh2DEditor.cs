@@ -53,7 +53,7 @@ namespace DynamicMesh2D {
             get { return _meshTransform; }
         }
 
-        public DynamicMesh2DComponent DynamicMesh2DComponent {
+        public DynamicMesh2DComponent DynamicMesh {
             get { return _meshTransform.GetComponent<DynamicMesh2DComponent>(); }
         }
 
@@ -73,7 +73,8 @@ namespace DynamicMesh2D {
                 new DrawVerticesComponent(this),
                 new SingleVertexSelectComponent(this),
                 new BoxVertexSelectComponent(this),
-                new TranslateVerticesComponent(this)
+                new TranslateVerticesComponent(this),
+                new BuilderTestComponent(this)
             };
         }
         

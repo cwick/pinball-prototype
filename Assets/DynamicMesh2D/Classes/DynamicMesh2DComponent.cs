@@ -6,6 +6,18 @@ using System.Collections;
 public class DynamicMesh2DComponent : MonoBehaviour {
     [HideInInspector]
     public bool ShouldDrawPivot = false;
+    private DynamicMesh2D.DynamicMesh2D _mesh;
+
+    public DynamicMesh2D.DynamicMesh2D Mesh {
+        get { 
+            return _mesh;
+        }
+
+        set {
+            _mesh = value;
+            GetComponent<MeshFilter>().sharedMesh = _mesh.BuildMesh();
+        }
+    }
 
     void OnDrawGizmosSelected() {
         if (ShouldDrawPivot) {

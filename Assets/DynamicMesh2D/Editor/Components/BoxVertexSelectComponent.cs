@@ -33,7 +33,7 @@ namespace DynamicMesh2D {
                     break;
                 case EventType.Repaint:
                     if (_isDragging) {
-                        DynamicMesh2D.Utils.DrawSelectionRectangle(_selectionRectangle);
+                        Utils.DrawSelectionRectangle(_selectionRectangle);
                     }
                     break;
                 case EventType.KeyDown:

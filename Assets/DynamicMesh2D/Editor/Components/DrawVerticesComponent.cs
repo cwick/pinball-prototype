@@ -34,7 +34,7 @@ namespace DynamicMesh2D {
         }
         
         private void DrawVertexSelectionHandle(Vector3 vertex, Color color) {
-            DynamicMesh2D.Utils.DrawVertexHandle(vertex, color, VERTEX_HANDLE_SIZE);
+            Utils.DrawVertexHandle(vertex, color, VERTEX_HANDLE_SIZE);
         }
     }
 } 
