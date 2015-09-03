@@ -6,6 +6,7 @@ using System.Linq;
 namespace DynamicMesh2D {
     [CustomEditor(typeof(DynamicMesh2DComponent))]
     class DynamicMesh2DEditor : Editor {
+        // TODO: don't store the Mesh. Use DynamicMesh2D instead
         private Mesh _mesh;
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
@@ -53,7 +54,11 @@ namespace DynamicMesh2D {
             get { return _meshTransform; }
         }
 
-        public DynamicMesh2DComponent DynamicMesh {
+        public DynamicMesh2D DynamicMesh {
+            get { return DynamicMeshComponent.Mesh; }
+        }
+
+        public DynamicMesh2DComponent DynamicMeshComponent {
             get { return _meshTransform.GetComponent<DynamicMesh2DComponent>(); }
         }
 
@@ -74,7 +79,8 @@ namespace DynamicMesh2D {
                 new SingleVertexSelectComponent(this),
                 new BoxVertexSelectComponent(this),
                 new TranslateVerticesComponent(this),
-                new BuilderTestComponent(this)
+                new BuilderTestComponent(this),
+                new ExtrudeToolComponent(this)
             };
         }
         

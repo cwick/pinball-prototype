@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace DynamicMesh2D {
     class BuilderTestComponent : EditorComponent {
@@ -15,7 +15,7 @@ namespace DynamicMesh2D {
 
         void BuildMesh() {
             var mesh = new DynamicMesh2D();
-            mesh.Vertices = new Vector2[] { 
+            mesh.Vertices = new List<Vector2>() { 
                 new Vector2(0,0),
                 new Vector2(1, -1),
                 new Vector2(-1, -1),
@@ -27,9 +27,9 @@ namespace DynamicMesh2D {
             face1.Vertices = new int[] { 0, 1, 2};
             face2.Vertices = new int[] { 0, 3, 4, 1 };
 
-            mesh.Faces = new Face[] { face1, face2 };
+            mesh.Faces = new List<Face>() { face1, face2 };
 
-            Editor.DynamicMesh.Mesh = mesh;
+            Editor.DynamicMeshComponent.Mesh = mesh;
         }
     }
 } 

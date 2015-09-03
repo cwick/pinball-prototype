@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace DynamicMesh2D {
     public class DynamicMesh2D {
+        public List<Vector2> Vertices = new List<Vector2>();
+        public List<Face> Faces = new List<Face>();
+
         public Mesh BuildMesh() {
             var mesh = new Mesh();
             mesh.vertices = Vertices.Select( x => (Vector3)x).ToArray();
@@ -12,9 +15,6 @@ namespace DynamicMesh2D {
             mesh.RecalculateBounds();
             return mesh;
         }
-
-        public Vector2[] Vertices;
-        public Face[] Faces;
 
         public int[] Triangulate() {
             var triangles = new List<int>();
