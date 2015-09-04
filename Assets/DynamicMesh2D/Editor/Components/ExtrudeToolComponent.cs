@@ -52,11 +52,6 @@ namespace DynamicMesh2D {
             mesh.Vertices.Add(mesh.Vertices[selectedVertices[0]]);
             var v4 = mesh.Vertices.Count() - 1;
 
-            Debug.Log(v1);
-            Debug.Log(v2);
-            Debug.Log(v3);
-            Debug.Log(v4);
-
             var newFace = new Face();
             newFace.Vertices = new int[] { v1, v2, v3, v4};
 
