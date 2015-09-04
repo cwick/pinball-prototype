@@ -48,7 +48,7 @@ namespace DynamicMesh2D {
 
         private void RecordUndoForTranslatedVertexCount(int count) {
             var message = count == 1 ? "Translate Vertex" : "Translate Vertices";
-            Undo.RegisterCompleteObjectUndo(Editor.DynamicMeshComponent, message);
+            Editor.RecordUndoState(message);
         }
     }
 }

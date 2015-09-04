@@ -8,12 +8,11 @@ namespace DynamicMesh2D {
     class DynamicMesh2DEditor : Editor {
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
-        private HashSet<int> _selectedVertices = new HashSet<int>();
-        
+
         public HashSet<int> SelectedVertices {
-            get { return _selectedVertices; }
+            get { return DynamicMeshComponent.SelectedVertices; }
             set {
-                _selectedVertices = value;
+                DynamicMeshComponent.SelectedVertices = value;
                 SceneView.RepaintAll();
             }
         }
@@ -21,7 +20,7 @@ namespace DynamicMesh2D {
         public Vector3[] SelectedVerticesLocalPositions {
             get { 
                 var vertices = DynamicMesh.Vertices;
-                return _selectedVertices.Select( (i) => (Vector3)vertices[i] ).ToArray();
+                return SelectedVertices.Select( (i) => (Vector3)vertices[i] ).ToArray();
             }
         }
 
@@ -127,6 +126,10 @@ namespace DynamicMesh2D {
         public void SetMeshDirty() {
             EditorUtility.SetDirty(target);
             DynamicMeshComponent.BuildMesh();
+        }
+
+        public void RecordUndoState(string command) {
+            Undo.RecordObject(DynamicMeshComponent, command);
         }
     }
 }

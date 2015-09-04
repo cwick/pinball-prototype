@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,6 +15,7 @@ namespace DynamicMesh2D {
         }
 
         private void Extrude() {
+            Editor.RecordUndoState("Extrude");
             var mesh = Editor.DynamicMesh;
             var selectedVertices = Editor.SelectedVertices.ToArray();
             if (selectedVertices.Count() != 2) {
@@ -34,7 +36,7 @@ namespace DynamicMesh2D {
             var index = System.Array.IndexOf(selectedFace.Vertices, selectedVertices.First());
 
             var nextIndex = (index + 1) % selectedFace.Vertices.Length;
-            var previousIndex = (index - 1) % selectedFace.Vertices.Length;
+            var previousIndex = index == 0 ? selectedFace.Vertices.Length - 1 : (index - 1);
 
             if (selectedFace.Vertices[nextIndex] == selectedVertices.Last()) {
                 selectedVertices = selectedVertices.Reverse().ToArray();
@@ -42,8 +44,6 @@ namespace DynamicMesh2D {
                 Debug.LogError("Selected vertices must be connected by an edge");
                 return;
             }
-
-            Debug.Log("Extruding");
 
             var v1 = selectedVertices[0];
             var v2 = selectedVertices[1];
