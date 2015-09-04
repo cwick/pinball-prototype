@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace DynamicMesh2D {
+    [System.Serializable]
     public class Face {
         public int[] Vertices;
 

@@ -25,6 +25,8 @@ namespace DynamicMesh2D {
             var delta = newPosition - oldPosition;
 
             if (delta != Vector3.zero) {
+                RecordUndoForTranslatedVertexCount(selectedVertices.Count());
+
                 TranslateVertices(delta);
                 Editor.SetMeshDirty();
             }
@@ -42,6 +44,11 @@ namespace DynamicMesh2D {
 
         private Vector3 GetCenterOfFace(Vector3[] vertices) {
             return vertices.Aggregate(Vector3.zero, (v1, v2) => v1 + v2) / vertices.Length;
+        }
+
+        private void RecordUndoForTranslatedVertexCount(int count) {
+            var message = count == 1 ? "Translate Vertex" : "Translate Vertices";
+            Undo.RegisterCompleteObjectUndo(Editor.DynamicMeshComponent, message);
         }
     }
 }

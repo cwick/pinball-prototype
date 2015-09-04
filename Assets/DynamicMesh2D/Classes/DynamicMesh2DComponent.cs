@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 public class DynamicMesh2DComponent : MonoBehaviour {
     [HideInInspector]
     public bool ShouldDrawPivot = false;
+
+    [SerializeField]
     private DynamicMesh2D.DynamicMesh2D _mesh;
 
     public DynamicMesh2D.DynamicMesh2D Mesh {
@@ -24,7 +27,7 @@ public class DynamicMesh2DComponent : MonoBehaviour {
     }
 
     void OnValidate() {
-        Debug.Log("Validate");
+        BuildMesh();
     }
 
     void OnDrawGizmosSelected() {

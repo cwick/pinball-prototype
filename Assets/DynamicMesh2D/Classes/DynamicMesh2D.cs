@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace DynamicMesh2D {
+    [System.Serializable]
     public class DynamicMesh2D {
         public List<Vector2> Vertices = new List<Vector2>();
         public List<Face> Faces = new List<Face>();
