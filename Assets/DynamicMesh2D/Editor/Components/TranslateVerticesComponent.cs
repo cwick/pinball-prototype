@@ -26,26 +26,18 @@ namespace DynamicMesh2D {
 
             if (delta != Vector3.zero) {
                 TranslateVertices(delta);
+                Editor.SetMeshDirty();
             }
         }
 
         private void TranslateVertices(Vector2 amount) {
-            var mesh = Editor.Mesh;
-            var vertices = Editor.VerticesWorldPositions;
+            var mesh = Editor.DynamicMesh;
 
             foreach (var i in Editor.SelectedVertices) {
-                vertices[i] += new Vector3(amount.x, amount.y, 0);
+                var worldVertex = Editor.MeshTransform.TransformPoint(mesh.Vertices[i]);
+                worldVertex += new Vector3(amount.x, amount.y);
+                mesh.Vertices[i] = Editor.MeshTransform.InverseTransformPoint(worldVertex);
             }
-
-            RecordUndoForTranslatedVertexCount(mesh, Editor.SelectedVertices.Count);
-
-            mesh.vertices = Editor.WorldVerticesToLocalVertices(vertices);
-            mesh.RecalculateBounds();
-        }
-
-        private void RecordUndoForTranslatedVertexCount(Mesh mesh, int count) {
-            var message = count == 1 ? "Translate Vertex" : "Translate Vertices";
-            Undo.RecordObject(mesh, message);
         }
 
         private Vector3 GetCenterOfFace(Vector3[] vertices) {

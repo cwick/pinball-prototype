@@ -22,7 +22,7 @@ namespace DynamicMesh2D {
         }
         
         public override void OnGUI() {
-            if (Editor.Mesh != null) {
+            if (Editor.DynamicMesh != null) {
                 ToggleEditModeFromButton();
             }
         }

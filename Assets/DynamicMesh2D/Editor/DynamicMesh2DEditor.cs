@@ -6,8 +6,6 @@ using System.Linq;
 namespace DynamicMesh2D {
     [CustomEditor(typeof(DynamicMesh2DComponent))]
     class DynamicMesh2DEditor : Editor {
-        // TODO: don't store the Mesh. Use DynamicMesh2D instead
-        private Mesh _mesh;
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
         private HashSet<int> _selectedVertices = new HashSet<int>();
@@ -22,8 +20,8 @@ namespace DynamicMesh2D {
 
         public Vector3[] SelectedVerticesLocalPositions {
             get { 
-                var vertices = Mesh.vertices;
-                return _selectedVertices.Select( (i) => vertices[i] ).ToArray();
+                var vertices = DynamicMesh.Vertices;
+                return _selectedVertices.Select( (i) => (Vector3)vertices[i] ).ToArray();
             }
         }
 
@@ -36,20 +34,16 @@ namespace DynamicMesh2D {
 
         public Vector3[] VerticesWorldPositions {
             get {
-                return Mesh.vertices.Select( (v) => _meshTransform.TransformPoint(v) ).ToArray();
+                return DynamicMesh.Vertices.Select( (v) => _meshTransform.TransformPoint(v) ).ToArray();
             }
         }
 
         public Vector2[] VerticesGUIPositions {
             get {
-                return Mesh.vertices.Select( (v) => HandleUtility.WorldToGUIPoint(_meshTransform.TransformPoint(v)) ).ToArray();
+                return DynamicMesh.Vertices.Select( (v) => HandleUtility.WorldToGUIPoint(_meshTransform.TransformPoint(v)) ).ToArray();
             }
         }
 
-        public Mesh Mesh {
-            get { return _mesh; }
-        }
-        
         public Transform MeshTransform {
             get { return _meshTransform; }
         }
@@ -70,7 +64,6 @@ namespace DynamicMesh2D {
         
         public void OnEnable() {
             var gameObject = ((Component)target).gameObject;
-            _mesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
             _meshTransform = gameObject.transform;
 
             _editorComponents = new EditorComponent[] {
@@ -129,6 +122,11 @@ namespace DynamicMesh2D {
 
         public Vector3[] WorldVerticesToLocalVertices(Vector3[] worldVertices) {
             return worldVertices.Select( (v) => MeshTransform.InverseTransformPoint(v) ).ToArray();
+        }
+
+        public void SetMeshDirty() {
+            EditorUtility.SetDirty(target);
+            DynamicMeshComponent.BuildMesh();
         }
     }
 }

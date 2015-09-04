@@ -15,8 +15,16 @@ public class DynamicMesh2DComponent : MonoBehaviour {
 
         set {
             _mesh = value;
-            GetComponent<MeshFilter>().sharedMesh = _mesh.BuildMesh();
+            BuildMesh();
         }
+    }
+
+    public void BuildMesh() {
+        GetComponent<MeshFilter>().sharedMesh = _mesh.BuildMesh();
+    }
+
+    void OnValidate() {
+        Debug.Log("Validate");
     }
 
     void OnDrawGizmosSelected() {
