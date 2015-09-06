@@ -12,6 +12,8 @@ namespace DynamicMesh2D {
         public override bool ProcessSceneEvents() {
             Tools.hidden = _isEditMode;
             Editor.DynamicMeshComponent.ShouldDrawPivot = _isEditMode;
+            ToggleEditModeFromKeyboardShortcut();
+            ToggleEditModeFromToolbar();
 
             if (!_isEditMode) {
                 return false;
@@ -22,18 +24,37 @@ namespace DynamicMesh2D {
         }
         
         public override void OnGUI() {
-            if (Editor.DynamicMesh != null) {
-                ToggleEditModeFromButton();
-            }
         }
         
         public override bool ShouldProcessEvent(Event e) {
             return true;
         }
         
-        private void ToggleEditModeFromButton() {
-            _isEditMode = GUILayout.Toggle(_isEditMode, "Edit Mode", "Button");
-            SceneView.RepaintAll();
+        private void ToggleEditModeFromToolbar() {
+            var height = 60;
+            var tooltip = "Sets the object interaction mode";
+
+            Handles.BeginGUI();
+            GUILayout.BeginArea(new Rect(0, Screen.height - height, Screen.width, height));
+
+            var objectMode = new GUIContent("Object Mode", tooltip);
+            var editMode = new GUIContent("Edit Mode", tooltip);
+            var selectedIndex = _isEditMode ? 1 : 0;
+            var width = GUILayout.Width(100);
+            var options = new GUIContent[] { objectMode, editMode };
+
+            _isEditMode = EditorGUILayout.Popup(selectedIndex, options, width) == 1;
+
+            GUILayout.EndArea();
+            Handles.EndGUI();
+        }
+
+        private void ToggleEditModeFromKeyboardShortcut() {
+            if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Tab) {
+                _isEditMode = !_isEditMode;
+                Event.current.Use();
+                SceneView.RepaintAll();
+            }
         }
         
         private void CaptureControlInput() {
