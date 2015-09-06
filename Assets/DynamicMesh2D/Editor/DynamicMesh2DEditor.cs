@@ -9,6 +9,11 @@ namespace DynamicMesh2D {
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
 
+        public bool IsEditMode {
+            get { return DynamicMeshComponent.IsEditMode; }
+            set { DynamicMeshComponent.IsEditMode = value; }
+        }
+
         public HashSet<int> SelectedVertices {
             get { return DynamicMeshComponent.SelectedVertices; }
             set {

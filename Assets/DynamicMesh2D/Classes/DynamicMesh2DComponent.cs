@@ -15,7 +15,14 @@ public class DynamicMesh2DComponent : MonoBehaviour, ISerializationCallbackRecei
     [SerializeField]
     private int[] _selectedVerticesSerialized;
 
+    private bool _isEditMode;
+
     public HashSet<int> SelectedVertices = new HashSet<int>();
+
+    public bool IsEditMode {
+        get { return _isEditMode; }
+        set { _isEditMode = value; }
+    }
 
     public DynamicMesh2D.DynamicMesh2D DynamicMesh {
         get { 
