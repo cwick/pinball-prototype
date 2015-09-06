@@ -10,11 +10,16 @@ namespace DynamicMesh2D {
 
         public Mesh BuildMesh() {
             var mesh = new Mesh();
+            CopyToMesh(mesh);
+            return mesh;
+        }
+
+        public void CopyToMesh(Mesh mesh) {
+            mesh.triangles = null;
             mesh.vertices = Vertices.Select( x => (Vector3)x).ToArray();
             mesh.triangles = Triangulate();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            return mesh;
         }
 
         public int[] Triangulate() {

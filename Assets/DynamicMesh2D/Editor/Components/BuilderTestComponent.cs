@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
@@ -26,7 +26,7 @@ namespace DynamicMesh2D {
 
             mesh.Faces = new List<Face>() { face1 };
 
-            Editor.DynamicMeshComponent.Mesh = mesh;
+            Editor.DynamicMeshComponent.DynamicMesh = mesh;
         }
     }
 } 

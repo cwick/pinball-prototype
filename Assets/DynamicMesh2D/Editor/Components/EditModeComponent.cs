@@ -32,7 +32,7 @@ namespace DynamicMesh2D {
         
         private void ToggleEditModeFromToolbar() {
             var height = 60;
-            var tooltip = "Sets the object interaction mode";
+            var tooltip = "Sets the object interaction mode\nShortcut: TAB";
 
             Handles.BeginGUI();
             GUILayout.BeginArea(new Rect(0, Screen.height - height, Screen.width, height));

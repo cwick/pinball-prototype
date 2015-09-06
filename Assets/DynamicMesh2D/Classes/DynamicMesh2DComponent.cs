@@ -10,26 +10,44 @@ public class DynamicMesh2DComponent : MonoBehaviour, ISerializationCallbackRecei
     public bool ShouldDrawPivot = false;
 
     [SerializeField]
-    private DynamicMesh2D.DynamicMesh2D _mesh;
+    private DynamicMesh2D.DynamicMesh2D _dynamicMesh;
 
     [SerializeField]
     private int[] _selectedVerticesSerialized;
 
     public HashSet<int> SelectedVertices = new HashSet<int>();
 
-    public DynamicMesh2D.DynamicMesh2D Mesh {
+    public DynamicMesh2D.DynamicMesh2D DynamicMesh {
         get { 
-            return _mesh;
+            return _dynamicMesh;
         }
 
         set {
-            _mesh = value;
+            _dynamicMesh = value;
             BuildMesh();
         }
     }
 
+    public Mesh Mesh {
+        get { 
+            return GetComponent<MeshFilter>().sharedMesh;
+        }
+
+        set {
+            GetComponent<MeshFilter>().sharedMesh = value;
+        }
+    }
+
     public void BuildMesh() {
-        GetComponent<MeshFilter>().sharedMesh = _mesh.BuildMesh();
+        var mesh = this.Mesh;
+        if (mesh == null) {
+            mesh = new Mesh();
+        }
+
+        _dynamicMesh.CopyToMesh(mesh);
+        mesh.name = string.Format("DynamicMesh2D {0}", GetInstanceID());
+        this.Mesh = mesh;
+
         BuildCollider();
     }
 
@@ -60,11 +78,11 @@ public class DynamicMesh2DComponent : MonoBehaviour, ISerializationCallbackRecei
             return;
         }
 
-        collider.pathCount = _mesh.Faces.Count;
+        collider.pathCount = _dynamicMesh.Faces.Count;
 
-        for (int i=0 ; i<_mesh.Faces.Count ; i++) {
-            var face = _mesh.Faces[i];
-            var vertices = face.Vertices.Select( v => _mesh.Vertices[v] );
+        for (int i=0 ; i<_dynamicMesh.Faces.Count ; i++) {
+            var face = _dynamicMesh.Faces[i];
+            var vertices = face.Vertices.Select( v => _dynamicMesh.Vertices[v] );
             collider.SetPath(i, vertices.ToArray());
         }
     }

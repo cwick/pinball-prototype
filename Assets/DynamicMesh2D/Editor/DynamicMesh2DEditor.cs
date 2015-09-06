@@ -48,7 +48,7 @@ namespace DynamicMesh2D {
         }
 
         public DynamicMesh2D DynamicMesh {
-            get { return DynamicMeshComponent.Mesh; }
+            get { return DynamicMeshComponent.DynamicMesh; }
         }
 
         public DynamicMesh2DComponent DynamicMeshComponent {
@@ -71,8 +71,7 @@ namespace DynamicMesh2D {
                 new SingleVertexSelectComponent(this),
                 new BoxVertexSelectComponent(this),
                 new TranslateVerticesComponent(this),
-                new BuilderTestComponent(this),
-                new ExtrudeToolComponent(this)
+                new BuilderTestComponent(this)
             };
         }
         
@@ -129,7 +128,7 @@ namespace DynamicMesh2D {
         }
 
         public void RecordUndoState(string command) {
-            Undo.RecordObject(DynamicMeshComponent, command);
+            Undo.RegisterCompleteObjectUndo(DynamicMeshComponent, command);
         }
     }
 }
