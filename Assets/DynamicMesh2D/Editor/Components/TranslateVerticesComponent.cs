@@ -17,12 +17,12 @@ namespace DynamicMesh2D {
         }
         
         public override bool ShouldProcessEvent(Event e) {
-            return Editor.SelectedVertices.Count > 0;
+            return Tools.current == Tool.Move && Editor.SelectedVertices.Count > 0;
         }
         
         private void DrawVertexTranslationHandle() {
             var selectedVertices = Editor.SelectedVerticesWorldPositions;
-            var oldPosition = GetCenterOfFace(selectedVertices);
+            var oldPosition = Utils.GetCenterPoint(selectedVertices);
             var newPosition = Handles.PositionHandle(oldPosition, Quaternion.identity);
             var delta = newPosition - oldPosition;
 
@@ -115,10 +115,6 @@ namespace DynamicMesh2D {
 
             Editor.SetMeshDirty();
             Editor.SelectedVertices = new HashSet<int>(new int[] { v3, v4 });
-        }
-
-        private Vector3 GetCenterOfFace(Vector3[] vertices) {
-            return vertices.Aggregate(Vector3.zero, (v1, v2) => v1 + v2) / vertices.Length;
         }
 
         private void RecordUndoForTranslatedVertexCount(int count) {

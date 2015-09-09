@@ -8,6 +8,7 @@ namespace DynamicMesh2D {
     class DynamicMesh2DEditor : Editor {
         private Transform _meshTransform;
         private EditorComponent[] _editorComponents;
+        private bool _shouldPreserveEditMode;
 
         public bool IsEditMode {
             get { return DynamicMeshComponent.IsEditMode; }
@@ -76,11 +77,24 @@ namespace DynamicMesh2D {
                 new SingleVertexSelectComponent(this),
                 new BoxVertexSelectComponent(this),
                 new TranslateVerticesComponent(this),
+                new ScaleVerticesComponent(this),
                 new BuilderTestComponent(this),
                 new SelectAllComponent(this)
             };
+
+            Undo.undoRedoPerformed += UndoRedoCallback;
         }
-        
+
+        public void OnDisable() {
+            if (_shouldPreserveEditMode) {
+                _shouldPreserveEditMode = false;
+            } else {
+                IsEditMode = false;
+            }
+
+            Undo.undoRedoPerformed -= UndoRedoCallback;
+        }
+
         public void OnSceneGUI() {
             foreach (var component in _editorComponents) {
                 if (component.ShouldProcessEvent(Event.current) && !component.ProcessSceneEvents()) {
@@ -131,6 +145,10 @@ namespace DynamicMesh2D {
 
         public void RecordUndoState(string command) {
             Undo.RegisterCompleteObjectUndo(DynamicMeshComponent, command);
+        }
+
+        private void UndoRedoCallback() {
+            _shouldPreserveEditMode = true;
         }
     }
 }

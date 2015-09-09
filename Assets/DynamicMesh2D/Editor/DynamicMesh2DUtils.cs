@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Linq;
 
 namespace DynamicMesh2D {
     public static class Utils {
@@ -28,6 +28,10 @@ namespace DynamicMesh2D {
             Handles.BeginGUI();
             SelectionRectangleStyle.Draw(selection, GUIContent.none, false, false, false, false);
             Handles.EndGUI();
+        }
+
+        public static Vector3 GetCenterPoint(Vector3[] vertices) {
+            return vertices.Aggregate(Vector3.zero, (v1, v2) => v1 + v2) / vertices.Length;
         }
 
         private static void DrawScreenVertexHandle(Vector2 location, Color color, int size) {
