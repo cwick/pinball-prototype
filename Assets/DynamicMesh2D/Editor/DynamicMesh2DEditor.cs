@@ -76,7 +76,8 @@ namespace DynamicMesh2D {
                 new SingleVertexSelectComponent(this),
                 new BoxVertexSelectComponent(this),
                 new TranslateVerticesComponent(this),
-                new BuilderTestComponent(this)
+                new BuilderTestComponent(this),
+                new SelectAllComponent(this)
             };
         }
         
@@ -121,10 +122,6 @@ namespace DynamicMesh2D {
             }
 
             return closestVertex;
-        }
-
-        public Vector3[] WorldVerticesToLocalVertices(Vector3[] worldVertices) {
-            return worldVertices.Select( (v) => MeshTransform.InverseTransformPoint(v) ).ToArray();
         }
 
         public void SetMeshDirty() {

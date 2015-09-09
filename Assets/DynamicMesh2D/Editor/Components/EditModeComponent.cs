@@ -21,9 +21,6 @@ namespace DynamicMesh2D {
             return true;
         }
         
-        public override void OnGUI() {
-        }
-        
         public override bool ShouldProcessEvent(Event e) {
             return true;
         }
