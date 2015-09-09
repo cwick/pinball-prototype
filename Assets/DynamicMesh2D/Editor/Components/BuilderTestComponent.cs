@@ -7,7 +7,7 @@ namespace DynamicMesh2D {
         public BuilderTestComponent(DynamicMesh2DEditor editor) : base(editor) {
         }
 
-        public override void OnGUI() {
+        public override void OnInspectorGUI() {
             if (GUILayout.Button("Build mesh")) {
                 BuildMesh();
             }

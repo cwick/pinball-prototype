@@ -63,7 +63,7 @@ namespace DynamicMesh2D {
 
         public override void OnInspectorGUI() {
             foreach (var component in _editorComponents) {
-                component.OnGUI();
+                component.OnInspectorGUI();
             }
         }
         
@@ -97,11 +97,8 @@ namespace DynamicMesh2D {
         }
 
         public void OnSceneGUI() {
-            foreach (var component in _editorComponents) {
-                if (component.ShouldProcessEvent(Event.current) && !component.ProcessSceneEvents()) {
-                    break;
-                }
-            }
+            ProcessSceneEvent(Event.current); 
+            DrawToolbar();
         }
         
         public HashSet<int> GetVerticesInRect(Rect rectangle) {
@@ -150,6 +147,29 @@ namespace DynamicMesh2D {
 
         private void UndoRedoCallback() {
             _shouldPreserveEditMode = true;
+        }
+
+        private void ProcessSceneEvent(Event e) {
+            foreach (var component in _editorComponents) {
+                if (component.ShouldProcessEvent(Event.current) && !component.ProcessSceneEvents()) {
+                    break;
+                }
+            }
+        }
+
+        private void DrawToolbar() {
+            var height = 60;
+            Handles.BeginGUI();
+            GUILayout.BeginArea(new Rect(0, Screen.height - height, Screen.width, height));
+            GUILayout.BeginHorizontal();
+
+            foreach (var component in _editorComponents) {
+                component.OnToolbar();
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.EndArea();
+            Handles.EndGUI();
         }
     }
 }

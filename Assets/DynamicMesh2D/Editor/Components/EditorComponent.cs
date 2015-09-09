@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 namespace DynamicMesh2D {
@@ -16,12 +16,14 @@ namespace DynamicMesh2D {
         protected DynamicMesh2DEditor Editor {
             get { return _editor; }
         }
-        
+
+        public virtual void OnToolbar() { }
+
         public virtual bool ProcessSceneEvents() {
             return true;
         }
         
-        public virtual void OnGUI() {}
+        public virtual void OnInspectorGUI() {}
         
         public virtual bool ShouldProcessEvent(Event e) {
             return GUIUtility.hotControl == 0;

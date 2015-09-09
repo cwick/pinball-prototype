@@ -11,7 +11,6 @@ namespace DynamicMesh2D {
             Tools.hidden = Editor.IsEditMode;
             Editor.DynamicMeshComponent.ShouldDrawPivot = Editor.IsEditMode;
             ToggleEditModeFromKeyboardShortcut();
-            ToggleEditModeFromToolbar();
 
             if (!Editor.IsEditMode) {
                 return false;
@@ -25,23 +24,16 @@ namespace DynamicMesh2D {
             return true;
         }
         
-        private void ToggleEditModeFromToolbar() {
-            var height = 60;
+        public override void OnToolbar() {
             var tooltip = "Sets the object interaction mode\nShortcut: TAB";
-
-            Handles.BeginGUI();
-            GUILayout.BeginArea(new Rect(0, Screen.height - height, Screen.width, height));
 
             var objectMode = new GUIContent("Object Mode", tooltip);
             var editMode = new GUIContent("Edit Mode", tooltip);
             var selectedIndex = Editor.IsEditMode ? 1 : 0;
-            var width = GUILayout.Width(100);
+            var width = GUILayout.Width(90);
             var options = new GUIContent[] { objectMode, editMode };
 
             Editor.IsEditMode = EditorGUILayout.Popup(selectedIndex, options, width) == 1;
-
-            GUILayout.EndArea();
-            Handles.EndGUI();
         }
 
         private void ToggleEditModeFromKeyboardShortcut() {
