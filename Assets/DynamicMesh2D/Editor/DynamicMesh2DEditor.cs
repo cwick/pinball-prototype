@@ -78,6 +78,7 @@ namespace DynamicMesh2D {
                 new BoxVertexSelectComponent(this),
                 new TranslateVerticesComponent(this),
                 new ScaleVerticesComponent(this),
+                new RotateVerticesComponent(this),
                 new BuilderTestComponent(this),
                 new SelectAllComponent(this)
             };
