@@ -47,6 +47,7 @@ namespace DynamicMesh2D {
 
         private void OnTranslationBegin() {
             if (Event.current.shift) {
+                ShowExtrudeNotification();
                 ExtrudeVertices();
             }
         }
@@ -120,6 +121,10 @@ namespace DynamicMesh2D {
         private void RecordUndoForTranslatedVertexCount(int count) {
             var message = count == 1 ? "Translate Vertex" : "Translate Vertices";
             Editor.RecordUndoState(message);
+        }
+
+        private void ShowExtrudeNotification() {
+            Utils.ShowNotification("Extrude"); 
         }
     }
 }

@@ -34,6 +34,14 @@ namespace DynamicMesh2D {
             return vertices.Aggregate(Vector3.zero, (v1, v2) => v1 + v2) / vertices.Length;
         }
 
+        public static void ShowNotification(string message) {
+            SceneView.lastActiveSceneView.ShowNotification(new GUIContent(message));
+        }
+
+        public static void HideNotification() {
+            SceneView.lastActiveSceneView.RemoveNotification(); 
+        }
+
         private static void DrawScreenVertexHandle(Vector2 location, Color color, int size) {
             var halfSize = size / 2.0f;
 
